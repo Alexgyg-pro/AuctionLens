@@ -35,6 +35,41 @@ router.get('/sales/:slug', (req, res) => {
   res.json({ ...sale, lots })
 })
 
+// Manifeste de reconnaissance : tout ce qu'il faut au composant eVision côté
+// client — le seuil de la vente et les images de référence ACTIVES de ses lots.
+// L'id est renvoyé en chaîne (contrat du composant) ; le mapping id → lotId
+// est résolu côté client, sans appel serveur supplémentaire.
+router.get('/sales/:slug/recognition-manifest', (req, res) => {
+  const sale = db
+    .prepare(
+      `SELECT s.id, s.recognition_threshold
+       FROM sales s
+       JOIN cabinets c ON c.id = s.cabinet_id
+       WHERE s.slug = ? AND s.status = 'published' AND c.subscription_status = 'active'`
+    )
+    .get(req.params.slug)
+  if (!sale) return notFound(res)
+
+  const references = db
+    .prepare(
+      `SELECT ir.id, ir.file_path, ir.lot_id
+       FROM image_references ir
+       JOIN lots l ON l.id = ir.lot_id
+       WHERE l.sale_id = ? AND ir.is_active = 1
+       ORDER BY ir.id`
+    )
+    .all(sale.id)
+
+  res.json({
+    threshold: sale.recognition_threshold,
+    references: references.map((r) => ({
+      id: String(r.id),
+      src: `/uploads/${r.file_path}`,
+      lotId: r.lot_id,
+    })),
+  })
+})
+
 router.get('/lots/:id', (req, res) => {
   const lot = db
     .prepare(

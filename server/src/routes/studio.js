@@ -136,7 +136,7 @@ router.put('/sales/:id', (req, res) => {
   const sale = getOwnedSale(req)
   if (!sale) return notFound(res)
 
-  const { title, description, event_date, location } = req.body ?? {}
+  const { title, description, event_date, location, recognition_threshold } = req.body ?? {}
   const next = { ...sale }
 
   if (title !== undefined) {
@@ -155,11 +155,29 @@ router.put('/sales/:id', (req, res) => {
       return badRequest(res, 'Date invalide : format attendu AAAA-MM-JJ')
     next.event_date = event_date
   }
+  if (recognition_threshold !== undefined) {
+    // Plage guidée du plan (§ calibration eVision) : 0.40–0.70.
+    if (
+      typeof recognition_threshold !== 'number' ||
+      recognition_threshold < 0.4 ||
+      recognition_threshold > 0.7
+    )
+      return badRequest(res, 'Seuil de reconnaissance invalide : entre 0.40 et 0.70')
+    next.recognition_threshold = recognition_threshold
+  }
 
   db.prepare(
     `UPDATE sales SET title = ?, slug = ?, description = ?, event_date = ?, location = ?,
-     updated_at = datetime('now') WHERE id = ?`
-  ).run(next.title, next.slug, next.description, next.event_date, next.location, sale.id)
+     recognition_threshold = ?, updated_at = datetime('now') WHERE id = ?`
+  ).run(
+    next.title,
+    next.slug,
+    next.description,
+    next.event_date,
+    next.location,
+    next.recognition_threshold,
+    sale.id
+  )
   res.json(db.prepare('SELECT * FROM sales WHERE id = ?').get(sale.id))
 })
 

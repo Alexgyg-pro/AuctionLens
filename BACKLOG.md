@@ -195,42 +195,42 @@ Conditions d'acceptation :
 **En tant qu'**Acheteur, **je veux** pointer ma caméra sur une image du catalogue (signalée par la petite icône « scannable »), **afin d'**ouvrir directement la fiche enrichie du lot.
 
 Conditions d'acceptation :
-- [ ] Depuis la page de la vente, un bouton « Scanner le catalogue » ouvre la page de scan ; la caméra ne démarre qu'après un geste explicite (exigence Safari iOS).
-- [ ] Étant donné une image de référence active imprimée, quand je la cadre dans le viewfinder, alors la fiche du lot correspondant s'ouvre.
-- [ ] Étant donné un lot avec plusieurs images de référence, quand je scanne n'importe laquelle, alors c'est la même fiche qui s'ouvre.
-- [ ] Pendant le chargement du modèle (5–15 s la première fois), un écran d'attente explicite est affiché.
-- [ ] Le composant `ImageRecognizer` d'eVision est intégré **sans aucune modification** ; TensorFlow.js n'est chargé que sur la route de scan (lazy).
+- [x] Depuis la page de la vente, un bouton « Scanner le catalogue » ouvre la page de scan ; la caméra ne démarre qu'après un geste explicite (exigence Safari iOS). *(Le bouton « Activer la caméra » est géré par le composant eVision lui-même.)*
+- [ ] Étant donné une image de référence active imprimée, quand je la cadre dans le viewfinder, alors la fiche du lot correspondant s'ouvre. *(À vérifier en recette PO, webcam ou smartphone — voir README « Tester le scan caméra ».)*
+- [ ] Étant donné un lot avec plusieurs images de référence, quand je scanne n'importe laquelle, alors c'est la même fiche qui s'ouvre. *(À vérifier en recette PO — le mapping n→1 est vérifié côté manifeste par `check-scan.mjs`.)*
+- [x] Pendant le chargement du modèle (5–15 s la première fois), un écran d'attente explicite est affiché. *(« Chargement du modèle IA… » + spinner, intégrés au composant.)*
+- [x] Le composant `ImageRecognizer` d'eVision est intégré **sans aucune modification** ; TensorFlow.js n'est chargé que sur la route de scan (lazy). *(Copie identique octet pour octet ; TF.js isolé dans le chunk ScanView au build.)*
 
 ### US-7.2 — Manifeste de reconnaissance
 **En tant que** plateforme, **je veux** livrer au client le mapping des images de référence d'une vente, **afin d'**alimenter le composant de reconnaissance.
 
 Conditions d'acceptation :
-- [ ] `GET /api/public/sales/:slug/recognition-manifest` renvoie `{ threshold, references: [{ id, src, lotId }] }` avec uniquement les images **actives** des lots de cette vente, vente publiée et cabinet actif.
-- [ ] Le `threshold` renvoyé est celui configuré sur la vente (`recognition_threshold`, défaut 0.55).
-- [ ] Après reconnaissance (`onImageRecognized({id})`), le client résout `id → lotId` via le manifeste, sans appel serveur supplémentaire.
+- [x] `GET /api/public/sales/:slug/recognition-manifest` renvoie `{ threshold, references: [{ id, src, lotId }] }` avec uniquement les images **actives** des lots de cette vente, vente publiée et cabinet actif. *(Vérifié par `check-scan.mjs`.)*
+- [x] Le `threshold` renvoyé est celui configuré sur la vente (`recognition_threshold`, défaut 0.55).
+- [x] Après reconnaissance (`onImageRecognized({id})`), le client résout `id → lotId` via le manifeste, sans appel serveur supplémentaire. *(Map construite au chargement de la page de scan.)*
 
 ### US-7.3 — Dégradé sans caméra
 **En tant qu'**Acheteur ayant refusé (ou ne pouvant pas donner) l'accès caméra, **je veux** être ramené à la consultation par liste, **afin de** ne pas être bloqué.
 
 Conditions d'acceptation :
-- [ ] Étant donné une permission caméra refusée, quand j'arrive sur la page de scan, alors un message clair propose la consultation par liste (pas d'écran cassé, pas d'erreur technique brute).
-- [ ] Étant donné un contexte non sécurisé (HTTP hors localhost), alors un message explique que le scan nécessite HTTPS au lieu d'échouer silencieusement.
+- [x] Étant donné une permission caméra refusée, quand j'arrive sur la page de scan, alors un message clair propose la consultation par liste (pas d'écran cassé, pas d'erreur technique brute). *(Message du composant + lien permanent « Consultez la liste des lots » sous le scanner.)*
+- [x] Étant donné un contexte non sécurisé (HTTP hors localhost), alors un message explique que le scan nécessite HTTPS au lieu d'échouer silencieusement. *(Détection `window.isSecureContext` avant de monter le composant.)*
 
 ### US-7.4 — Calibration du seuil par le cabinet
 **En tant que** Cabinet, **je veux** régler le seuil de reconnaissance de ma vente et le tester en conditions réelles, **afin de** trouver l'équilibre entre détection et faux positifs sur mon catalogue imprimé.
 
 Conditions d'acceptation :
-- [ ] Le studio permet de modifier `recognition_threshold` (plage guidée 0.40–0.70, recommandation 0.50–0.60 pour images imprimées affichée à l'écran).
-- [ ] Un mode test accessible au cabinet active le `debugOverlay` d'eVision pour relever les scores en direct, suivant la méthode de calibration du README eVision.
-- [ ] Étant donné une image qui génère des faux positifs, quand je la désactive, alors elle sort du manifeste sans suppression.
+- [x] Le studio permet de modifier `recognition_threshold` (plage guidée 0.40–0.70, recommandation 0.50–0.60 pour images imprimées affichée à l'écran). *(Validation serveur de la plage ; vérifié par `check-scan.mjs`.)*
+- [x] Un mode test accessible au cabinet active le `debugOverlay` d'eVision pour relever les scores en direct, suivant la méthode de calibration du README eVision. *(Lien « ouvrir le scan avec les scores affichés » — `/v/:slug/scan?debug=1` — avec la méthode des 90 % rappelée à l'écran.)*
+- [x] Étant donné une image qui génère des faux positifs, quand je la désactive, alors elle sort du manifeste sans suppression. *(Vérifié par `check-scan.mjs`.)*
 
 ### US-7.5 — Kit catalogue (QR + icône)
 **En tant que** Cabinet, **je veux** télécharger le QR code de ma vente et l'icône « scannable », **afin de** les intégrer à la maquette de mon catalogue papier.
 
 Conditions d'acceptation :
-- [ ] Le studio fournit, pour une vente, son QR code pointant vers `/v/:slug` (téléchargeable, qualité d'impression).
-- [ ] L'icône « scannable » est téléchargeable en vectoriel et PNG, accompagnée de la consigne d'usage : QR sur la page d'informations pratiques du catalogue, icône à côté de chaque image scannable.
-- [ ] Le QR n'est proposé qu'à partir de la première publication (slug figé).
+- [x] Le studio fournit, pour une vente, son QR code pointant vers `/v/:slug` (téléchargeable, qualité d'impression). *(PNG 1024 px ≈ 8,5 cm à 300 dpi, et SVG vectoriel.)*
+- [x] L'icône « scannable » est téléchargeable en vectoriel et PNG, accompagnée de la consigne d'usage : QR sur la page d'informations pratiques du catalogue, icône à côté de chaque image scannable.
+- [x] Le QR n'est proposé qu'à partir de la première publication (slug figé). *(Section « Kit catalogue » affichée seulement si `published_at` est renseigné.)*
 
 ---
 

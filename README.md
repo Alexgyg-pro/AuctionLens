@@ -37,6 +37,26 @@ cd ../client && npm run dev   # → http://localhost:5173
 
 Le client proxe `/api` et `/uploads` vers l'API en développement.
 
+## Tester le scan caméra
+
+La caméra n'est accessible que sur `localhost` ou en HTTPS (`getUserMedia`).
+
+- **Sur le PC de dev** : `http://localhost:5173` est considéré sécurisé — la
+  webcam fonctionne directement sur la page de scan (`/v/<slug>/scan`).
+- **Sur smartphone** : il faut un tunnel HTTPS vers le serveur Vite, par
+  exemple [ngrok](https://ngrok.com) :
+
+  ```bash
+  ngrok http 5173
+  ```
+
+  Puis ouvrir l'URL `https://…ngrok…/v/<slug>` sur le téléphone. (Alternative :
+  `vite --host` + certificat local de confiance.)
+
+Le premier chargement du modèle MobileNet prend 5–15 s selon la connexion ;
+les fichiers WASM de TF.js sont copiés dans `client/public/tfwasm/` par le
+script `postinstall` (`scripts/copy-wasm.mjs`).
+
 ## Identifiants de développement (seed)
 
 | Rôle    | Email                       | Mot de passe  |

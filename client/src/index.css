@@ -376,3 +376,44 @@ section {
   text-decoration: none;
   font-weight: 600;
 }
+
+/* --- Scan (EPIC 7) --- */
+
+.scan-button {
+  display: block;
+  text-align: center;
+  margin: 0 0 20px;
+  padding: 14px 16px;
+  border-radius: 8px;
+  background: var(--accent);
+  color: #fff;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.scan-fallback {
+  margin-top: 20px;
+  font-size: 14px;
+}
+
+.kit-row {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.kit-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  text-align: center;
+  font-size: 14px;
+}
+
+.kit-item code {
+  font-size: 12px;
+}

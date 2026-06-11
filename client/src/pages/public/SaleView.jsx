@@ -1,9 +1,12 @@
-import { useEffect, useState } from 'react'
+import { lazy, Suspense, useEffect, useState } from 'react'
 import { Link, Route, Routes, useParams } from 'react-router-dom'
 import { api, ApiError } from '../../api.js'
 import { formatDate, formatEstimate } from './format.js'
 import { PublicLoading, PublicNotFound } from './PublicStates.jsx'
 import LotView from './LotView.jsx'
+
+// Route lazy : TensorFlow.js (lourd) n'est téléchargé que si l'acheteur ouvre le scan.
+const ScanView = lazy(() => import('./ScanView.jsx'))
 
 // Espace acheteur : anonyme, lecture seule, pensé pour le smartphone en salle.
 export default function SaleView() {
@@ -11,6 +14,14 @@ export default function SaleView() {
     <Routes>
       <Route index element={<SaleLots />} />
       <Route path="lots/:lotId" element={<LotView />} />
+      <Route
+        path="scan"
+        element={
+          <Suspense fallback={<PublicLoading />}>
+            <ScanView />
+          </Suspense>
+        }
+      />
       <Route path="*" element={<PublicNotFound />} />
     </Routes>
   )
@@ -53,6 +64,10 @@ function SaleLots() {
         </p>
         {sale.description && <p className="public-description">{sale.description}</p>}
       </header>
+
+      <Link to="scan" className="scan-button">
+        📷 Scanner le catalogue
+      </Link>
 
       <ul className="lot-list">
         {sale.lots.map((lot) => {

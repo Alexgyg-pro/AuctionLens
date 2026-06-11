@@ -12,6 +12,9 @@ dist
 dist-ssr
 *.local
 
+# Copiés depuis node_modules par scripts/copy-wasm.mjs (postinstall)
+public/tfwasm
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
