@@ -1,5 +1,8 @@
+import { Routes, Route } from 'react-router-dom'
 import UserBar from '../../components/UserBar.jsx'
 import { useAuth } from '../../auth/AuthContext.jsx'
+import SalesList from './SalesList.jsx'
+import SaleDetail from './SaleDetail.jsx'
 
 export default function StudioHome() {
   const { session } = useAuth()
@@ -19,11 +22,12 @@ export default function StudioHome() {
   }
 
   return (
-    <main className="page">
+    <main className="page page-wide">
       <UserBar />
-      <h1>Studio</h1>
-      <p>Bienvenue, {session.cabinet?.name ?? session.user.email}.</p>
-      <p>Gestion des ventes, lots et ressources — à venir (EPIC 4).</p>
+      <Routes>
+        <Route index element={<SalesList />} />
+        <Route path="sales/:id" element={<SaleDetail />} />
+      </Routes>
     </main>
   )
 }

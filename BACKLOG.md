@@ -66,7 +66,7 @@ Conditions d'acceptation :
 Conditions d'acceptation :
 - [x] Étant donné un utilisateur cabinet, quand il appelle une route `/api/admin/*`, alors la réponse est `403`.
 - [x] Étant donné un visiteur non connecté, quand il appelle une route `/api/studio/*` ou `/api/admin/*`, alors la réponse est `401`.
-- [ ] Étant donné un cabinet A, quand il tente d'accéder à une vente, un lot, une image ou une ressource du cabinet B (par id direct), alors la réponse est `404`. *(Vérifiable à partir de l'EPIC 4, quand ces entités existeront — la règle est posée dans le middleware.)*
+- [x] Étant donné un cabinet A, quand il tente d'accéder à une vente, un lot, une image ou une ressource du cabinet B (par id direct), alors la réponse est `404`. *(Vérifié pour ventes et lots à l'EPIC 4 ; images et ressources suivront le même helper à l'EPIC 5.)*
 
 ---
 
@@ -107,27 +107,27 @@ Conditions d'acceptation :
 **En tant que** Cabinet, **je veux** créer une vente (titre, description, date de l'événement, lieu), **afin de** préparer sa couche numérique.
 
 Conditions d'acceptation :
-- [ ] Quand je crée une vente, alors elle est en statut `draft` et invisible des acheteurs.
-- [ ] Un slug court est généré depuis le titre ; en cas de collision un suffixe est ajouté.
-- [ ] Je peux modifier les informations d'une vente ; je ne peux supprimer une vente que si elle est en `draft`.
+- [x] Quand je crée une vente, alors elle est en statut `draft` et invisible des acheteurs.
+- [x] Un slug court est généré depuis le titre ; en cas de collision un suffixe est ajouté.
+- [x] Je peux modifier les informations d'une vente ; je ne peux supprimer une vente que si elle est en `draft`.
 
 ### US-4.2 — Cycle de vie d'une vente
 **En tant que** Cabinet, **je veux** publier, archiver et republier une vente, **afin de** contrôler ce que voient les acheteurs.
 
 Conditions d'acceptation :
-- [ ] Étant donné une vente `draft` avec au moins 1 lot portant au moins 1 image de référence active, quand je la publie, alors elle devient accessible sur `/v/:slug`. *(La condition « image active » ne s'applique qu'à partir de l'EPIC 5 ; avant, la publication exige seulement ≥ 1 lot.)*
-- [ ] Étant donné une vente sans lot, quand je tente de la publier, alors la publication est refusée avec un message expliquant la règle.
-- [ ] Le slug est définitivement figé à la première publication (le QR imprimé pointe dessus) ; modifier le titre ensuite ne le change pas.
-- [ ] Les transitions autorisées sont exactement : `draft→published`, `published→archived`, `archived→published`.
-- [ ] Étant donné une vente archivée, quand un acheteur ouvre son URL, alors la réponse est `404`.
+- [x] Étant donné une vente `draft` avec au moins 1 lot portant au moins 1 image de référence active, quand je la publie, alors elle devient accessible sur `/v/:slug`. *(Règle « ≥ 1 lot » vérifiée à l'EPIC 4 ; la condition « image active » sera ajoutée à l'EPIC 5, l'accessibilité publique à l'EPIC 6.)*
+- [x] Étant donné une vente sans lot, quand je tente de la publier, alors la publication est refusée avec un message expliquant la règle.
+- [x] Le slug est définitivement figé à la première publication (le QR imprimé pointe dessus) ; modifier le titre ensuite ne le change pas.
+- [x] Les transitions autorisées sont exactement : `draft→published`, `published→archived`, `archived→published`.
+- [ ] Étant donné une vente archivée, quand un acheteur ouvre son URL, alors la réponse est `404`. *(Vérifiable à l'EPIC 6.)*
 
 ### US-4.3 — Gestion des lots
 **En tant que** Cabinet, **je veux** ajouter, modifier, ordonner et supprimer les lots d'une vente, **afin de** refléter le catalogue papier.
 
 Conditions d'acceptation :
-- [ ] Un lot porte : numéro de catalogue, titre, artiste, description, estimation basse/haute, ordre d'affichage.
-- [ ] Deux lots d'une même vente ne peuvent pas avoir le même numéro de catalogue.
-- [ ] Quand je supprime un lot, alors ses images de référence et ressources (et leurs fichiers) sont supprimées avec lui.
+- [x] Un lot porte : numéro de catalogue, titre, artiste, description, estimation basse/haute, ordre d'affichage.
+- [x] Deux lots d'une même vente ne peuvent pas avoir le même numéro de catalogue.
+- [ ] Quand je supprime un lot, alors ses images de référence et ressources (et leurs fichiers) sont supprimées avec lui. *(Cascade BDD posée ; vérifiable avec les fichiers à l'EPIC 5.)*
 
 ---
 
@@ -157,8 +157,8 @@ Conditions d'acceptation :
 **En tant qu'**Admin (et en tant que plateforme), **je veux** que les quotas du plan soient réellement bloquants, **afin que** la mécanique d'abonnement ait un sens.
 
 Conditions d'acceptation :
-- [ ] Étant donné un cabinet au plafond de `max_lots_per_sale`, quand il crée un lot de plus, alors la création est refusée (`403`) avec un message mentionnant le plan.
-- [ ] Étant donné un cabinet au plafond de `max_active_sales`, quand il publie une vente de plus, alors la publication est refusée.
+- [x] Étant donné un cabinet au plafond de `max_lots_per_sale`, quand il crée un lot de plus, alors la création est refusée (`403`) avec un message mentionnant le plan. *(Vérifié dès l'EPIC 4.)*
+- [x] Étant donné un cabinet au plafond de `max_active_sales`, quand il publie une vente de plus, alors la publication est refusée. *(Vérifié dès l'EPIC 4.)*
 - [ ] Étant donné un upload qui ferait dépasser `max_storage_mb` (somme des images de référence + ressources du cabinet), alors l'upload est refusé avant l'écriture du fichier.
 - [ ] Le studio affiche la consommation courante des trois quotas.
 

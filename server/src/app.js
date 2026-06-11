@@ -7,6 +7,7 @@ import { fileURLToPath } from 'node:url'
 import db from './db/index.js'
 import authRouter from './routes/auth.js'
 import adminRouter from './routes/admin.js'
+import studioRouter from './routes/studio.js'
 import { requireAdmin, requireCabinet } from './middleware/auth.js'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
@@ -46,7 +47,6 @@ app.use('/api/auth', authRouter)
 
 // Espaces protégés : tout /api/admin/* ou /api/studio/* exige le bon rôle,
 // y compris les routes futures.
-const studioRouter = express.Router()
 app.use('/api/admin', requireAdmin, adminRouter)
 app.use('/api/studio', requireCabinet, studioRouter)
 
@@ -55,5 +55,4 @@ app.use('/api', (req, res) => {
   res.status(404).json({ error: { code: 'NOT_FOUND', message: 'Route inconnue' } })
 })
 
-export { studioRouter }
 export default app
