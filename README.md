@@ -44,14 +44,26 @@ La caméra n'est accessible que sur `localhost` ou en HTTPS (`getUserMedia`).
 - **Sur le PC de dev** : `http://localhost:5173` est considéré sécurisé — la
   webcam fonctionne directement sur la page de scan (`/v/<slug>/scan`).
 - **Sur smartphone** : il faut un tunnel HTTPS vers le serveur Vite, par
-  exemple [ngrok](https://ngrok.com) :
+  exemple [ngrok](https://ngrok.com) (compte gratuit + authtoken requis à la
+  première utilisation) :
 
   ```bash
+  # 1. Une seule fois : installer ngrok et enregistrer son authtoken
+  #    (téléchargement et token sur https://dashboard.ngrok.com)
+  ngrok config add-authtoken <votre-token>
+
+  # 2. À chaque session de test, avec client et serveur déjà lancés :
   ngrok http 5173
   ```
 
-  Puis ouvrir l'URL `https://…ngrok…/v/<slug>` sur le téléphone. (Alternative :
-  `vite --host` + certificat local de confiance.)
+  ngrok affiche alors une ligne `Forwarding` avec une URL du type
+  `https://a1b2c3d4.ngrok-free.app` — c'est **cette URL** (elle change à
+  chaque lancement) qu'il faut ouvrir sur le téléphone, suivie du chemin de
+  la vente : `https://a1b2c3d4.ngrok-free.app/v/<slug>`.
+
+  Les domaines ngrok sont autorisés dans `client/vite.config.js`
+  (`server.allowedHosts`) — sans cela Vite répond « Blocked request ».
+  (Alternative sans ngrok : `vite --host` + certificat local de confiance.)
 
 Le premier chargement du modèle MobileNet prend 5–15 s selon la connexion ;
 les fichiers WASM de TF.js sont copiés dans `client/public/tfwasm/` par le
