@@ -3,6 +3,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom'
 import { api } from '../../api.js'
 import SaleStatusBadge from './SaleStatusBadge.jsx'
 import LotForm from './LotForm.jsx'
+import CatalogKit from './CatalogKit.jsx'
 
 export default function SaleDetail() {
   const { id } = useParams()
@@ -12,6 +13,8 @@ export default function SaleDetail() {
   const [error, setError] = useState(null)
   const [info, setInfo] = useState({ title: '', event_date: '', location: '', description: '' })
   const [editingLotId, setEditingLotId] = useState(null)
+  const [threshold, setThreshold] = useState('0.55')
+  const [thresholdSaved, setThresholdSaved] = useState(false)
 
   async function load() {
     try {
@@ -23,6 +26,7 @@ export default function SaleDetail() {
         location: s.location,
         description: s.description,
       })
+      setThreshold(String(s.recognition_threshold))
     } catch (e) {
       if (e.status === 404) setNotFound(true)
       else setError(e.message)
@@ -41,6 +45,22 @@ export default function SaleDetail() {
         method: 'PUT',
         body: { ...info, event_date: info.event_date || null },
       })
+      await load()
+    } catch (err) {
+      setError(err.message)
+    }
+  }
+
+  async function saveThreshold(e) {
+    e.preventDefault()
+    setError(null)
+    setThresholdSaved(false)
+    try {
+      await api(`/api/studio/sales/${id}`, {
+        method: 'PUT',
+        body: { recognition_threshold: Number(threshold) },
+      })
+      setThresholdSaved(true)
       await load()
     } catch (err) {
       setError(err.message)
@@ -152,6 +172,47 @@ export default function SaleDetail() {
         </label>
         <button type="submit">Enregistrer</button>
       </form>
+
+      <h2>Reconnaissance (scan acheteur)</h2>
+      <form onSubmit={saveThreshold} className="form">
+        <label>
+          Seuil de reconnaissance (0.40 – 0.70)
+          <input
+            type="number"
+            min="0.40"
+            max="0.70"
+            step="0.01"
+            value={threshold}
+            onChange={(e) => {
+              setThreshold(e.target.value)
+              setThresholdSaved(false)
+            }}
+          />
+        </label>
+        <p className="quotas">
+          Plage recommandée pour des images imprimées : <strong>0.50 – 0.60</strong>. Plus bas =
+          détection plus facile mais plus de faux positifs ; plus haut = plus strict (exige bon
+          éclairage et cadrage précis).
+        </p>
+        <button type="submit">Enregistrer le seuil</button>
+        {thresholdSaved && <p>Seuil enregistré ✓</p>}
+      </form>
+      {sale.status === 'published' ? (
+        <p>
+          Mode test :{' '}
+          <a href={`/v/${sale.slug}/scan?debug=1`} target="_blank" rel="noopener noreferrer">
+            ouvrir le scan avec les scores affichés
+          </a>{' '}
+          — pointez la caméra sur vos images imprimées, relevez le score maximal de chacune, puis
+          fixez le seuil à environ 90 % du score le plus bas observé.
+        </p>
+      ) : (
+        <p className="quotas">
+          Le mode test du scan sera disponible quand la vente sera publiée.
+        </p>
+      )}
+
+      {sale.published_at && <CatalogKit slug={sale.slug} />}
 
       <h2>Lots ({sale.lots.length})</h2>
       {sale.lots.length === 0 ? (
