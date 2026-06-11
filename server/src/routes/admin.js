@@ -2,6 +2,7 @@ import { Router } from 'express'
 import bcrypt from 'bcryptjs'
 import db from '../db/index.js'
 import { cabinetUsage } from '../usage.js'
+import { lengthError } from '../validate.js'
 
 const router = Router()
 
@@ -31,6 +32,12 @@ router.post('/cabinets', (req, res) => {
   const { name, contact_email, plan_id, user_email, user_password } = req.body ?? {}
 
   if (typeof name !== 'string' || !name.trim()) return badRequest(res, 'Nom du cabinet requis')
+  const tooLong = lengthError(res, [
+    ['Nom', name, 200],
+    ['Email de contact', contact_email, 254],
+    ['Email utilisateur', user_email, 254],
+  ])
+  if (tooLong) return tooLong
   if (typeof contact_email !== 'string' || !EMAIL_RE.test(contact_email))
     return badRequest(res, 'Email de contact invalide')
   if (typeof user_email !== 'string' || !EMAIL_RE.test(user_email))
@@ -82,6 +89,11 @@ router.put('/cabinets/:id', (req, res) => {
   }
 
   const { name, contact_email, plan_id } = req.body ?? {}
+  const tooLong = lengthError(res, [
+    ['Nom', name, 200],
+    ['Email de contact', contact_email, 254],
+  ])
+  if (tooLong) return tooLong
   const next = {
     name: cabinet.name,
     contact_email: cabinet.contact_email,

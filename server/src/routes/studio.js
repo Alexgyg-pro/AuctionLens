@@ -2,6 +2,7 @@ import { Router } from 'express'
 import db from '../db/index.js'
 import { cabinetUsage } from '../usage.js'
 import { deleteFileQuiet } from '../uploads.js'
+import { lengthError } from '../validate.js'
 
 const router = Router()
 
@@ -93,6 +94,12 @@ router.get('/sales', (req, res) => {
 router.post('/sales', (req, res) => {
   const { title, description = '', event_date = null, location = '' } = req.body ?? {}
   if (typeof title !== 'string' || !title.trim()) return badRequest(res, 'Titre requis')
+  const tooLong = lengthError(res, [
+    ['Titre', title, 200],
+    ['Description', String(description), 5000],
+    ['Lieu', String(location), 200],
+  ])
+  if (tooLong) return tooLong
   if (event_date !== null && !/^\d{4}-\d{2}-\d{2}$/.test(event_date))
     return badRequest(res, 'Date invalide : format attendu AAAA-MM-JJ')
 
@@ -137,6 +144,12 @@ router.put('/sales/:id', (req, res) => {
   if (!sale) return notFound(res)
 
   const { title, description, event_date, location, recognition_threshold } = req.body ?? {}
+  const tooLong = lengthError(res, [
+    ['Titre', title, 200],
+    ['Description', description, 5000],
+    ['Lieu', location, 200],
+  ])
+  if (tooLong) return tooLong
   const next = { ...sale }
 
   if (title !== undefined) {
@@ -264,7 +277,7 @@ router.put('/sales/:id/status', (req, res) => {
 // --- Lots ---
 
 function validateLotPayload(res, body, { partial = false } = {}) {
-  const { lot_number, title, estimate_low, estimate_high } = body
+  const { lot_number, title, artist, description, estimate_low, estimate_high } = body
   if (!partial || lot_number !== undefined) {
     if (typeof lot_number !== 'string' || !lot_number.trim())
       return badRequest(res, 'Numéro de lot requis')
@@ -272,6 +285,13 @@ function validateLotPayload(res, body, { partial = false } = {}) {
   if (!partial || title !== undefined) {
     if (typeof title !== 'string' || !title.trim()) return badRequest(res, 'Titre requis')
   }
+  const tooLong = lengthError(res, [
+    ['Numéro de lot', lot_number, 20],
+    ['Titre', title, 200],
+    ['Artiste', artist, 200],
+    ['Description', description, 5000],
+  ])
+  if (tooLong) return tooLong
   for (const [label, value] of [['basse', estimate_low], ['haute', estimate_high]]) {
     if (value !== undefined && value !== null && (typeof value !== 'number' || value < 0))
       return badRequest(res, `Estimation ${label} invalide`)

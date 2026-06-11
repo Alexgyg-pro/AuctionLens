@@ -48,9 +48,39 @@ export default function CabinetList() {
     return <p>Chargement…</p>
   }
 
+  // Vue d'ensemble : cabinets par statut + échéances dans les 30 jours (ou dépassées)
+  const active = cabinets.filter((c) => c.subscription_status === 'active').length
+  const suspended = cabinets.length - active
+  const soonLimit = new Date()
+  soonLimit.setDate(soonLimit.getDate() + 30)
+  const expiringSoon = cabinets.filter(
+    (c) =>
+      c.subscription_status === 'active' &&
+      c.subscription_expires_at &&
+      new Date(c.subscription_expires_at) <= soonLimit
+  )
+  const isExpiringSoon = (c) => expiringSoon.some((x) => x.id === c.id)
+
   return (
     <>
       <h1>Cabinets</h1>
+      {cabinets.length > 0 && (
+        <p className="dashboard-line">
+          <span className="badge badge-active">{active} actif{active > 1 ? 's' : ''}</span>{' '}
+          <span className="badge badge-suspended">{suspended} suspendu{suspended > 1 ? 's' : ''}</span>
+        </p>
+      )}
+      {expiringSoon.length > 0 && (
+        <p className="notice">
+          Échéance d'abonnement sous 30 jours :{' '}
+          {expiringSoon.map((c, i) => (
+            <span key={c.id}>
+              {i > 0 && ', '}
+              <Link to={`/admin/cabinets/${c.id}`}>{c.name}</Link> ({c.subscription_expires_at})
+            </span>
+          ))}
+        </p>
+      )}
       {cabinets.length === 0 ? (
         <p>Aucun cabinet pour le moment.</p>
       ) : (
@@ -75,7 +105,10 @@ export default function CabinetList() {
                     {c.subscription_status === 'active' ? 'Actif' : 'Suspendu'}
                   </span>
                 </td>
-                <td>{c.subscription_expires_at ?? '—'}</td>
+                <td>
+                  {c.subscription_expires_at ?? '—'}
+                  {isExpiringSoon(c) && ' ⚠'}
+                </td>
               </tr>
             ))}
           </tbody>

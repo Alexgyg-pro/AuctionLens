@@ -4,6 +4,7 @@ import { imageSize } from 'image-size'
 import db from '../db/index.js'
 import { storageUsedBytes } from '../usage.js'
 import { makeUploader, toRelPath, toAbsPath, deleteFileQuiet } from '../uploads.js'
+import { lengthError } from '../validate.js'
 
 const router = Router()
 
@@ -102,6 +103,11 @@ router.post('/lots/:lotId/image-references', quotaPrecheck, uploadImageRef('file
     return notFound(res)
   }
   if (!req.file) return badRequest(res, 'Fichier image requis (champ « file », JPEG ou PNG)')
+  const tooLong = lengthError(res, [['Label', req.body?.label, 100]])
+  if (tooLong) {
+    deleteFileQuiet(toRelPath(req.file.path))
+    return tooLong
+  }
 
   let dimensions
   try {
@@ -140,6 +146,8 @@ router.put('/image-references/:id', (req, res) => {
   if (!ref) return notFound(res)
 
   const { label, is_active } = req.body ?? {}
+  const tooLong = lengthError(res, [['Label', label, 100]])
+  if (tooLong) return tooLong
   const next = { ...ref }
   if (label !== undefined) next.label = String(label)
   if (is_active !== undefined) {
@@ -192,6 +200,14 @@ router.post('/lots/:lotId/resources', quotaPrecheck, uploadResource('file'), (re
   if (typeof title !== 'string' || !title.trim()) {
     cleanup()
     return badRequest(res, 'Titre requis')
+  }
+  const tooLong = lengthError(res, [
+    ['Titre', title, 200],
+    ['Contenu', body, 20000],
+  ])
+  if (tooLong) {
+    cleanup()
+    return tooLong
   }
 
   let filePath = null
@@ -246,6 +262,11 @@ router.put('/resources/:id', (req, res) => {
   if (!resource) return notFound(res)
 
   const { title, body, sort_order } = req.body ?? {}
+  const tooLong = lengthError(res, [
+    ['Titre', title, 200],
+    ['Contenu', body, 20000],
+  ])
+  if (tooLong) return tooLong
   const next = { ...resource }
 
   if (title !== undefined) {

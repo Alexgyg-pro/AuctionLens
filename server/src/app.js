@@ -62,4 +62,30 @@ app.use('/api', (req, res) => {
   res.status(404).json({ error: { code: 'NOT_FOUND', message: 'Route inconnue' } })
 })
 
+// Production locale : si le client a été buildé (client/dist), Express le sert
+// lui-même — un seul processus suffit alors. En développement, Vite s'en charge.
+const CLIENT_DIST = path.resolve(__dirname, '../../client/dist')
+if (fs.existsSync(path.join(CLIENT_DIST, 'index.html'))) {
+  app.use(express.static(CLIENT_DIST))
+  // SPA : toute autre URL GET (hors /api et /uploads) rend index.html,
+  // le routage se fait côté client.
+  app.use((req, res, next) => {
+    if (req.method !== 'GET' || req.path.startsWith('/uploads')) return next()
+    res.sendFile(path.join(CLIENT_DIST, 'index.html'))
+  })
+}
+
+// Filet de sécurité : JSON malformé → 400 explicite, le reste → 500 JSON
+// (jamais de page d'erreur HTML sur une API).
+app.use((err, req, res, next) => {
+  if (err.type === 'entity.parse.failed') {
+    return res.status(400).json({ error: { code: 'BAD_JSON', message: 'Corps JSON invalide' } })
+  }
+  if (err.type === 'entity.too.large') {
+    return res.status(413).json({ error: { code: 'PAYLOAD_TOO_LARGE', message: 'Requête trop volumineuse' } })
+  }
+  console.error(err)
+  res.status(500).json({ error: { code: 'INTERNAL', message: 'Erreur interne du serveur' } })
+})
+
 export default app
