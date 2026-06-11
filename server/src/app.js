@@ -9,6 +9,7 @@ import authRouter from './routes/auth.js'
 import adminRouter from './routes/admin.js'
 import studioRouter from './routes/studio.js'
 import mediaRouter from './routes/media.js'
+import publicRouter from './routes/public.js'
 import { requireAdmin, requireCabinet } from './middleware/auth.js'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
@@ -45,6 +46,10 @@ app.get('/api/health', (req, res) => {
 })
 
 app.use('/api/auth', authRouter)
+
+// Espace acheteur : lecture seule anonyme, limitée aux ventes publiées
+// de cabinets actifs (filtre appliqué dans le routeur).
+app.use('/api/public', publicRouter)
 
 // Espaces protégés : tout /api/admin/* ou /api/studio/* exige le bon rôle,
 // y compris les routes futures.

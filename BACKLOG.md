@@ -94,8 +94,8 @@ Conditions d'acceptation :
 
 Conditions d'acceptation :
 - [x] Étant donné un cabinet suspendu, quand son utilisateur tente d'utiliser le studio, alors l'accès est bloqué avec un message explicite (la session existante ne suffit pas : vérifié à chaque requête).
-- [ ] Étant donné un cabinet suspendu, quand un acheteur ouvre l'URL publique d'une de ses ventes publiées, alors la réponse est `404`. *(Vérifiable à l'EPIC 6, quand les routes publiques existeront.)*
-- [x] Quand je réactive le cabinet, alors le studio et les URLs publiques refonctionnent sans autre action. *(Studio vérifié ; URLs publiques à l'EPIC 6.)*
+- [x] Étant donné un cabinet suspendu, quand un acheteur ouvre l'URL publique d'une de ses ventes publiées, alors la réponse est `404`. *(Vérifié à l'EPIC 6 — `check-public.mjs`.)*
+- [x] Quand je réactive le cabinet, alors le studio et les URLs publiques refonctionnent sans autre action. *(Studio vérifié à l'EPIC 3 ; URLs publiques à l'EPIC 6.)*
 
 ---
 
@@ -119,7 +119,7 @@ Conditions d'acceptation :
 - [x] Étant donné une vente sans lot, quand je tente de la publier, alors la publication est refusée avec un message expliquant la règle.
 - [x] Le slug est définitivement figé à la première publication (le QR imprimé pointe dessus) ; modifier le titre ensuite ne le change pas.
 - [x] Les transitions autorisées sont exactement : `draft→published`, `published→archived`, `archived→published`.
-- [ ] Étant donné une vente archivée, quand un acheteur ouvre son URL, alors la réponse est `404`. *(Vérifiable à l'EPIC 6.)*
+- [x] Étant donné une vente archivée, quand un acheteur ouvre son URL, alors la réponse est `404`. *(Vérifié à l'EPIC 6 — `check-public.mjs`.)*
 
 ### US-4.3 — Gestion des lots
 **En tant que** Cabinet, **je veux** ajouter, modifier, ordonner et supprimer les lots d'une vente, **afin de** refléter le catalogue papier.
@@ -172,18 +172,18 @@ Conditions d'acceptation :
 **En tant qu'**Acheteur, **je veux** ouvrir l'URL d'une vente (via le QR de la page d'informations du catalogue) et voir la liste de ses lots, **afin de** parcourir le contenu enrichi sans créer de compte.
 
 Conditions d'acceptation :
-- [ ] Étant donné une vente publiée d'un cabinet actif, quand j'ouvre `/v/:slug`, alors je vois le titre, le cabinet, la date, le lieu et la liste ordonnée des lots (numéro, titre, artiste, estimation).
-- [ ] Étant donné une vente `draft`, archivée ou d'un cabinet suspendu, quand j'ouvre son URL, alors j'obtiens une page 404 propre.
-- [ ] La page est utilisable sur smartphone (consultation à une main, en salle des ventes).
-- [ ] Aucune authentification ni donnée personnelle n'est demandée.
+- [x] Étant donné une vente publiée d'un cabinet actif, quand j'ouvre `/v/:slug`, alors je vois le titre, le cabinet, la date, le lieu et la liste ordonnée des lots (numéro, titre, artiste, estimation).
+- [x] Étant donné une vente `draft`, archivée ou d'un cabinet suspendu, quand j'ouvre son URL, alors j'obtiens une page 404 propre (message neutre, sans révéler l'existence de la vente).
+- [x] La page est utilisable sur smartphone (consultation à une main, en salle des ventes). *(Conçue mobile-first ; vérification visuelle lors de la recette PO.)*
+- [x] Aucune authentification ni donnée personnelle n'est demandée. *(Les routes `/api/public/*` n'exigent aucune session.)*
 
 ### US-6.2 — Fiche enrichie d'un lot
 **En tant qu'**Acheteur, **je veux** consulter la fiche d'un lot avec toutes ses ressources, **afin de** m'informer avant d'enchérir.
 
 Conditions d'acceptation :
-- [ ] La fiche affiche la notice du lot puis ses ressources dans l'ordre défini par le cabinet : visionneuse pour les images HD, lecteur pour les vidéos uploadées, lien d'ouverture pour les PDFs, texte mis en forme pour les expertises, lien sortant pour les ressources externes.
-- [ ] Étant donné un lot dont la vente n'est pas publiée, quand j'accède à sa fiche par URL directe, alors la réponse est `404`.
-- [ ] Je peux revenir à la liste des lots en un geste.
+- [x] La fiche affiche la notice du lot puis ses ressources dans l'ordre défini par le cabinet : visionneuse pour les images HD, lecteur pour les vidéos uploadées, lien d'ouverture pour les PDFs, texte mis en forme pour les expertises, lien sortant pour les ressources externes.
+- [x] Étant donné un lot dont la vente n'est pas publiée, quand j'accède à sa fiche par URL directe, alors la réponse est `404`. *(Vérifié pour draft, archivée et cabinet suspendu.)*
+- [x] Je peux revenir à la liste des lots en un geste. *(Lien « ← Tous les lots » en tête de fiche.)*
 
 ---
 
