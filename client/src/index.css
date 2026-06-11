@@ -229,3 +229,150 @@ button.danger {
 section {
   margin-bottom: 32px;
 }
+
+/* --- Espace acheteur (public, mobile-first) --- */
+
+.public-page {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+.public-header {
+  margin-bottom: 24px;
+}
+
+.public-header h1 {
+  margin: 4px 0 8px;
+  font-size: 26px;
+  line-height: 1.2;
+}
+
+.public-cabinet {
+  margin: 0;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--accent);
+}
+
+.public-muted {
+  color: var(--text-muted);
+}
+
+.public-description {
+  margin-top: 12px;
+}
+
+.public-back {
+  margin-bottom: 16px;
+}
+
+.public-back a {
+  text-decoration: none;
+  font-size: 15px;
+}
+
+.public-notfound {
+  text-align: center;
+  padding-top: 64px;
+}
+
+.lot-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.lot-card {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  text-decoration: none;
+  color: inherit;
+}
+
+.lot-card:active {
+  background: #faf8f4;
+}
+
+.lot-number {
+  font-size: 13px;
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.lot-title {
+  font-weight: 600;
+}
+
+.lot-artist {
+  font-style: italic;
+  color: var(--text-muted);
+}
+
+.lot-meta {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  font-size: 14px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+.lot-resources::before {
+  content: '✦ ';
+  color: var(--accent);
+}
+
+.lot-estimate {
+  margin: 4px 0;
+  color: var(--text-muted);
+}
+
+.resource-list {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.resource {
+  margin: 0;
+}
+
+.resource h2 {
+  font-size: 18px;
+  margin: 0 0 8px;
+}
+
+.resource-image img,
+.resource video {
+  width: 100%;
+  border-radius: 8px;
+  display: block;
+}
+
+.resource-image figcaption {
+  margin-top: 6px;
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+.resource-text p {
+  margin: 0 0 12px;
+}
+
+.resource-file {
+  display: inline-block;
+  padding: 12px 16px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+}

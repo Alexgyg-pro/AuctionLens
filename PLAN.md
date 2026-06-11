@@ -1,8 +1,8 @@
 # AuctionLens — Plan d'architecture et de développement
 
 > Document de référence. Le développement se fait phase par phase (voir §4).
-> Statut : **EPIC 5 (images de référence & ressources) terminée** le 2026-06-11 — EPIC 1 à 4 validées et releasées. Phase 3 complète, en attente de recette PO.
-> Prochaine étape : **EPIC 6** (espace acheteur : consultation publique — Phase 4).
+> Statut : **EPIC 6 (consultation publique acheteur) terminée** le 2026-06-11 — EPIC 1 à 5 validées et releasées. Phase 4 complète, en attente de recette PO.
+> Prochaine étape : **EPIC 7** (scan & reconnaissance d'image : intégration eVision — Phase 5).
 > Releases GitHub : merge `develop` → `main` + push en fin d'EPIC validée (branche distante unique : `main`).
 
 ## Contexte
