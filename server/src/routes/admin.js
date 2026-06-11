@@ -1,6 +1,7 @@
 import { Router } from 'express'
 import bcrypt from 'bcryptjs'
 import db from '../db/index.js'
+import { cabinetUsage } from '../usage.js'
 
 const router = Router()
 
@@ -8,53 +9,6 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 function badRequest(res, message) {
   return res.status(400).json({ error: { code: 'BAD_REQUEST', message } })
-}
-
-// Les tables de l'EPIC 4+ n'existent pas encore : les compteurs valent 0
-// tant qu'elles ne sont pas créées, puis deviennent réels sans changer ce code.
-function tableExists(name) {
-  return !!db
-    .prepare("SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = ?")
-    .get(name)
-}
-
-function cabinetUsage(cabinetId) {
-  const usage = { active_sales: 0, total_lots: 0, storage_bytes: 0 }
-  if (tableExists('sales')) {
-    usage.active_sales = db
-      .prepare("SELECT COUNT(*) AS n FROM sales WHERE cabinet_id = ? AND status = 'published'")
-      .get(cabinetId).n
-  }
-  if (tableExists('lots')) {
-    usage.total_lots = db
-      .prepare(
-        'SELECT COUNT(*) AS n FROM lots l JOIN sales s ON s.id = l.sale_id WHERE s.cabinet_id = ?'
-      )
-      .get(cabinetId).n
-  }
-  if (tableExists('image_references')) {
-    usage.storage_bytes += db
-      .prepare(
-        `SELECT COALESCE(SUM(ir.file_size), 0) AS n
-         FROM image_references ir
-         JOIN lots l ON l.id = ir.lot_id
-         JOIN sales s ON s.id = l.sale_id
-         WHERE s.cabinet_id = ?`
-      )
-      .get(cabinetId).n
-  }
-  if (tableExists('resources')) {
-    usage.storage_bytes += db
-      .prepare(
-        `SELECT COALESCE(SUM(r.file_size), 0) AS n
-         FROM resources r
-         JOIN lots l ON l.id = r.lot_id
-         JOIN sales s ON s.id = l.sale_id
-         WHERE s.cabinet_id = ?`
-      )
-      .get(cabinetId).n
-  }
-  return usage
 }
 
 const CABINET_SELECT = `

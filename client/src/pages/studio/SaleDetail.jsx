@@ -164,6 +164,7 @@ export default function SaleDetail() {
               <th>Titre</th>
               <th>Artiste</th>
               <th>Estimation</th>
+              <th>Contenu</th>
               <th></th>
             </tr>
           </thead>
@@ -171,7 +172,7 @@ export default function SaleDetail() {
             {sale.lots.map((lot) =>
               editingLotId === lot.id ? (
                 <tr key={lot.id}>
-                  <td colSpan={5}>
+                  <td colSpan={6}>
                     <LotForm
                       saleId={sale.id}
                       lot={lot}
@@ -192,6 +193,11 @@ export default function SaleDetail() {
                     {lot.estimate_low != null && lot.estimate_high != null
                       ? `${lot.estimate_low} – ${lot.estimate_high} €`
                       : '—'}
+                  </td>
+                  <td>
+                    <Link to={`/studio/lots/${lot.id}`}>
+                      {lot.active_image_count}/{lot.image_count} img · {lot.resource_count} res
+                    </Link>
                   </td>
                   <td className="row-actions">
                     <button type="button" onClick={() => setEditingLotId(lot.id)}>

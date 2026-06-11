@@ -3,6 +3,7 @@ import UserBar from '../../components/UserBar.jsx'
 import { useAuth } from '../../auth/AuthContext.jsx'
 import SalesList from './SalesList.jsx'
 import SaleDetail from './SaleDetail.jsx'
+import LotDetail from './LotDetail.jsx'
 
 export default function StudioHome() {
   const { session } = useAuth()
@@ -27,6 +28,7 @@ export default function StudioHome() {
       <Routes>
         <Route index element={<SalesList />} />
         <Route path="sales/:id" element={<SaleDetail />} />
+        <Route path="lots/:id" element={<LotDetail />} />
       </Routes>
     </main>
   )

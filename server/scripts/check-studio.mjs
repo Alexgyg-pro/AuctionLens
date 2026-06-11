@@ -1,6 +1,7 @@
 // Vérification des conditions d'acceptation de l'EPIC 4 contre le serveur réel.
 // Usage : node scripts/check-studio.mjs (démarre le serveur lui-même sur le port 3100)
 import { spawn } from 'node:child_process'
+import { makePng, uploadForm } from './test-utils.mjs'
 
 const PORT = 3100
 const BASE = `http://localhost:${PORT}`
@@ -16,14 +17,14 @@ function check(label, ok, detail = '') {
   if (!ok) failures++
 }
 
-async function req(path, { method = 'GET', body, cookie } = {}) {
+async function req(path, { method = 'GET', body, cookie, form } = {}) {
   const res = await fetch(BASE + path, {
     method,
     headers: {
       ...(body ? { 'Content-Type': 'application/json' } : {}),
       ...(cookie ? { Cookie: cookie } : {}),
     },
-    body: body ? JSON.stringify(body) : undefined,
+    body: form ?? (body ? JSON.stringify(body) : undefined),
   })
   const setCookie = res.headers.get('set-cookie')
   return {
@@ -124,6 +125,16 @@ try {
     body: { lot_number: '12', title: 'Même numéro, autre vente' },
   })
   check('même numéro dans une autre vente → autorisé', r.status === 201)
+  const lotSale2 = r.data
+
+  // Depuis l'EPIC 5, publier exige au moins une image de référence active.
+  for (const targetLot of [lot, lotSale2]) {
+    await req(`/api/studio/lots/${targetLot.id}/image-references`, {
+      method: 'POST',
+      cookie: a.cookie,
+      form: uploadForm(makePng(300, 300), { fields: { label: 'vue test' } }),
+    })
+  }
 
   // Slug : suit le titre en brouillon, figé après publication
   r = await req(`/api/studio/sales/${sale.id}`, {
@@ -208,6 +219,16 @@ try {
 } finally {
   server.kill()
   const { default: db } = await import('../src/db/index.js')
+  const testCabinets = db
+    .prepare("SELECT id FROM cabinets WHERE contact_email LIKE 'epic4-%@test.local'")
+    .all()
   db.prepare("DELETE FROM cabinets WHERE contact_email LIKE 'epic4-%@test.local'").run()
+  const fs = await import('node:fs')
+  const path = await import('node:path')
+  const { fileURLToPath } = await import('node:url')
+  const uploadsRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../uploads')
+  for (const { id } of testCabinets) {
+    fs.rmSync(path.join(uploadsRoot, String(id)), { recursive: true, force: true })
+  }
 }
 process.exit(failures === 0 ? 0 : 1)

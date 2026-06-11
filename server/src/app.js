@@ -8,6 +8,7 @@ import db from './db/index.js'
 import authRouter from './routes/auth.js'
 import adminRouter from './routes/admin.js'
 import studioRouter from './routes/studio.js'
+import mediaRouter from './routes/media.js'
 import { requireAdmin, requireCabinet } from './middleware/auth.js'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
@@ -49,6 +50,7 @@ app.use('/api/auth', authRouter)
 // y compris les routes futures.
 app.use('/api/admin', requireAdmin, adminRouter)
 app.use('/api/studio', requireCabinet, studioRouter)
+app.use('/api/studio', requireCabinet, mediaRouter)
 
 // 404 JSON pour toute route API inconnue
 app.use('/api', (req, res) => {

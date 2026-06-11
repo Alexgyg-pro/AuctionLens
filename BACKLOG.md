@@ -127,7 +127,7 @@ Conditions d'acceptation :
 Conditions d'acceptation :
 - [x] Un lot porte : numéro de catalogue, titre, artiste, description, estimation basse/haute, ordre d'affichage.
 - [x] Deux lots d'une même vente ne peuvent pas avoir le même numéro de catalogue.
-- [ ] Quand je supprime un lot, alors ses images de référence et ressources (et leurs fichiers) sont supprimées avec lui. *(Cascade BDD posée ; vérifiable avec les fichiers à l'EPIC 5.)*
+- [x] Quand je supprime un lot, alors ses images de référence et ressources (et leurs fichiers) sont supprimées avec lui. *(Vérifié à l'EPIC 5 : lignes BDD et fichiers disque.)*
 
 ---
 
@@ -139,19 +139,19 @@ Conditions d'acceptation :
 **En tant que** Cabinet, **je veux** associer plusieurs images de référence à un même lot, **afin que** chaque vue du catalogue (face, détail, signature…) mène à la même fiche enrichie.
 
 Conditions d'acceptation :
-- [ ] Quand j'uploade une image (JPEG/PNG) sur un lot, alors elle est acceptée seulement si elle fait au moins 224×224 px ; sinon, message d'erreur expliquant l'exigence.
-- [ ] Je peux donner un label à chaque image (« vue de face », « détail signature ») et en ajouter plusieurs au même lot.
-- [ ] L'écran d'upload affiche les conseils qualité (fond neutre, objet 60–80 % du cadre, image nette).
-- [ ] Je peux désactiver une image (`is_active = false`) sans la supprimer : elle disparaît du manifeste de reconnaissance mais reste visible dans le studio.
+- [x] Quand j'uploade une image (JPEG/PNG) sur un lot, alors elle est acceptée seulement si elle fait au moins 224×224 px ; sinon, message d'erreur expliquant l'exigence.
+- [x] Je peux donner un label à chaque image (« vue de face », « détail signature ») et en ajouter plusieurs au même lot.
+- [x] L'écran d'upload affiche les conseils qualité (fond neutre, objet 60–80 % du cadre, image nette).
+- [x] Je peux désactiver une image (`is_active = false`) sans la supprimer : elle disparaît du manifeste de reconnaissance mais reste visible dans le studio. *(« Hors manifeste » vérifié via la règle de publication ; le manifeste lui-même arrive à l'EPIC 7.)*
 
 ### US-5.2 — Ressources enrichies d'un lot
 **En tant que** Cabinet, **je veux** attacher à un lot des ressources de types variés, **afin d'**offrir à l'acheteur un contenu qui dépasse le catalogue papier.
 
 Conditions d'acceptation :
-- [ ] Types supportés : image HD (upload), vidéo (upload), PDF (upload), texte d'expertise (saisie), lien externe (URL — article de presse, YouTube…).
-- [ ] Chaque ressource a un titre et un ordre d'affichage que je peux modifier.
-- [ ] Les limites de taille par type sont appliquées et affichées avant l'upload ; pour les vidéos lourdes, l'UI recommande le type « lien ».
-- [ ] Quand je supprime une ressource, alors son fichier est supprimé du serveur.
+- [x] Types supportés : image HD (upload), vidéo (upload), PDF (upload), texte d'expertise (saisie), lien externe (URL — article de presse, YouTube…).
+- [x] Chaque ressource a un titre et un ordre d'affichage que je peux modifier.
+- [x] Les limites de taille par type sont appliquées et affichées avant l'upload ; pour les vidéos lourdes, l'UI recommande le type « lien ».
+- [x] Quand je supprime une ressource, alors son fichier est supprimé du serveur.
 
 ### US-5.3 — Quotas du plan appliqués
 **En tant qu'**Admin (et en tant que plateforme), **je veux** que les quotas du plan soient réellement bloquants, **afin que** la mécanique d'abonnement ait un sens.
@@ -159,8 +159,8 @@ Conditions d'acceptation :
 Conditions d'acceptation :
 - [x] Étant donné un cabinet au plafond de `max_lots_per_sale`, quand il crée un lot de plus, alors la création est refusée (`403`) avec un message mentionnant le plan. *(Vérifié dès l'EPIC 4.)*
 - [x] Étant donné un cabinet au plafond de `max_active_sales`, quand il publie une vente de plus, alors la publication est refusée. *(Vérifié dès l'EPIC 4.)*
-- [ ] Étant donné un upload qui ferait dépasser `max_storage_mb` (somme des images de référence + ressources du cabinet), alors l'upload est refusé avant l'écriture du fichier.
-- [ ] Le studio affiche la consommation courante des trois quotas.
+- [x] Étant donné un upload qui ferait dépasser `max_storage_mb` (somme des images de référence + ressources du cabinet), alors l'upload est refusé avant l'écriture du fichier. *(Pré-contrôle sur Content-Length avant écriture + contrôle exact sur la taille réelle après.)*
+- [x] Le studio affiche la consommation courante des trois quotas.
 
 ---
 

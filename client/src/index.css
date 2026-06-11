@@ -185,3 +185,47 @@ button.danger {
   flex: 1;
   min-width: 120px;
 }
+
+.quotas {
+  font-size: 14px;
+  color: var(--text-muted);
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+}
+
+.media-list {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.media-list li {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  padding: 8px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+}
+
+.media-list li.inactive {
+  opacity: 0.55;
+}
+
+.media-list img {
+  width: 96px;
+  height: 96px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.media-list .row-actions {
+  margin-left: auto;
+}
+
+section {
+  margin-bottom: 32px;
+}

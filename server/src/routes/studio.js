@@ -1,7 +1,22 @@
 import { Router } from 'express'
 import db from '../db/index.js'
+import { cabinetUsage } from '../usage.js'
+import { deleteFileQuiet } from '../uploads.js'
 
 const router = Router()
+
+// Tous les fichiers (refs + ressources) rattachés à un ensemble de lots.
+function filePathsOfLots(lotIds) {
+  if (lotIds.length === 0) return []
+  const marks = lotIds.map(() => '?').join(',')
+  const refs = db
+    .prepare(`SELECT file_path FROM image_references WHERE lot_id IN (${marks})`)
+    .all(...lotIds)
+  const resources = db
+    .prepare(`SELECT file_path FROM resources WHERE lot_id IN (${marks}) AND file_path IS NOT NULL`)
+    .all(...lotIds)
+  return [...refs, ...resources].map((r) => r.file_path)
+}
 
 function badRequest(res, message) {
   return res.status(400).json({ error: { code: 'BAD_REQUEST', message } })
@@ -101,9 +116,20 @@ router.get('/sales/:id', (req, res) => {
   const sale = getOwnedSale(req)
   if (!sale) return notFound(res)
   const lots = db
-    .prepare('SELECT * FROM lots WHERE sale_id = ? ORDER BY sort_order, id')
+    .prepare(
+      `SELECT l.*,
+        (SELECT COUNT(*) FROM image_references ir WHERE ir.lot_id = l.id) AS image_count,
+        (SELECT COUNT(*) FROM image_references ir WHERE ir.lot_id = l.id AND ir.is_active = 1) AS active_image_count,
+        (SELECT COUNT(*) FROM resources r WHERE r.lot_id = l.id) AS resource_count
+       FROM lots l WHERE l.sale_id = ? ORDER BY l.sort_order, l.id`
+    )
     .all(sale.id)
   res.json({ ...sale, lots })
+})
+
+router.get('/usage', (req, res) => {
+  const plan = cabinetPlan(req.cabinetId)
+  res.json({ plan, usage: cabinetUsage(req.cabinetId) })
 })
 
 router.put('/sales/:id', (req, res) => {
@@ -148,7 +174,10 @@ router.delete('/sales/:id', (req, res) => {
       },
     })
   }
+  const lotIds = db.prepare('SELECT id FROM lots WHERE sale_id = ?').all(sale.id).map((l) => l.id)
+  const files = filePathsOfLots(lotIds)
   db.prepare('DELETE FROM sales WHERE id = ?').run(sale.id)
+  files.forEach(deleteFileQuiet)
   res.json({ ok: true })
 })
 
@@ -176,6 +205,18 @@ router.put('/sales/:id/status', (req, res) => {
       .get(sale.id).n
     if (lotCount === 0) {
       return badRequest(res, 'Publication impossible : la vente doit contenir au moins un lot')
+    }
+    const lotsWithActiveImage = db
+      .prepare(
+        `SELECT COUNT(*) AS n FROM lots l WHERE l.sale_id = ?
+         AND EXISTS (SELECT 1 FROM image_references ir WHERE ir.lot_id = l.id AND ir.is_active = 1)`
+      )
+      .get(sale.id).n
+    if (lotsWithActiveImage === 0) {
+      return badRequest(
+        res,
+        'Publication impossible : au moins un lot doit porter une image de référence active'
+      )
     }
     const plan = cabinetPlan(req.cabinetId)
     const activeSales = db
@@ -273,7 +314,14 @@ router.post('/sales/:saleId/lots', (req, res) => {
 router.get('/lots/:id', (req, res) => {
   const lot = getOwnedLot(req)
   if (!lot) return notFound(res)
-  res.json(lot)
+  const sale = db.prepare('SELECT id, title, status FROM sales WHERE id = ?').get(lot.sale_id)
+  const images = db
+    .prepare('SELECT * FROM image_references WHERE lot_id = ? ORDER BY id')
+    .all(lot.id)
+  const resources = db
+    .prepare('SELECT * FROM resources WHERE lot_id = ? ORDER BY sort_order, id')
+    .all(lot.id)
+  res.json({ ...lot, sale, images, resources })
 })
 
 router.put('/lots/:id', (req, res) => {
@@ -325,7 +373,9 @@ router.put('/lots/:id', (req, res) => {
 router.delete('/lots/:id', (req, res) => {
   const lot = getOwnedLot(req)
   if (!lot) return notFound(res)
+  const files = filePathsOfLots([lot.id])
   db.prepare('DELETE FROM lots WHERE id = ?').run(lot.id)
+  files.forEach(deleteFileQuiet)
   res.json({ ok: true })
 })
 

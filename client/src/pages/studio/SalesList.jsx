@@ -8,12 +8,14 @@ const EMPTY_FORM = { title: '', event_date: '', location: '', description: '' }
 export default function SalesList() {
   const navigate = useNavigate()
   const [sales, setSales] = useState(null)
+  const [quotas, setQuotas] = useState(null)
   const [form, setForm] = useState(EMPTY_FORM)
   const [error, setError] = useState(null)
   const [submitting, setSubmitting] = useState(false)
 
   useEffect(() => {
     api('/api/studio/sales').then(setSales).catch((e) => setError(e.message))
+    api('/api/studio/usage').then(setQuotas).catch(() => {})
   }, [])
 
   function setField(field) {
@@ -42,6 +44,15 @@ export default function SalesList() {
   return (
     <>
       <h1>Mes ventes</h1>
+      {quotas && (
+        <p className="quotas">
+          Plan <strong>{quotas.plan.name}</strong> — ventes publiées :{' '}
+          {quotas.usage.active_sales}/{quotas.plan.max_active_sales} · lots :{' '}
+          {quotas.usage.total_lots} (max {quotas.plan.max_lots_per_sale}/vente) · stockage :{' '}
+          {(quotas.usage.storage_bytes / (1024 * 1024)).toFixed(1)}/
+          {quotas.plan.max_storage_mb} Mo
+        </p>
+      )}
       {sales.length === 0 ? (
         <p>Aucune vente pour le moment — créez la première ci-dessous.</p>
       ) : (
