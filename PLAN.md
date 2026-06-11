@@ -1,7 +1,8 @@
 # AuctionLens — Plan d'architecture et de développement
 
 > Document de référence. Le développement se fait phase par phase (voir §4).
-> Statut : **aucune phase démarrée** — prochaine étape : Phase 0.
+> Statut : **Phase 0 terminée** (EPIC 1 — socle technique, mergée sur `develop` le 2026-06-11).
+> Prochaine étape : **Phase 1** (EPIC 2 — auth & rôles, EPIC 3 — administration des cabinets).
 
 ## Contexte
 

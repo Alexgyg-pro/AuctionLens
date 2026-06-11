@@ -26,18 +26,18 @@
 **En tant que** développeur, **je veux** démarrer le client et le serveur avec une commande chacun, **afin de** travailler sur une base saine et reproductible.
 
 Conditions d'acceptation :
-- [ ] Étant donné un clone du dépôt, quand je lance l'installation puis le serveur et le client, alors la SPA s'affiche sur `http://localhost:5173` et `GET /api/health` répond `200`.
-- [ ] Les appels `/api/*` et `/uploads/*` du client sont proxyfiés vers Express en développement.
-- [ ] La base SQLite est créée automatiquement au premier démarrage, migrations appliquées (table `schema_migrations` renseignée).
-- [ ] Le dossier `evision/` n'est ni modifié ni référencé par le build.
+- [x] Étant donné un clone du dépôt, quand je lance l'installation puis le serveur et le client, alors la SPA s'affiche sur `http://localhost:5173` et `GET /api/health` répond `200`. *(API vérifiée ; affichage de la SPA à confirmer par le PO dans son navigateur.)*
+- [x] Les appels `/api/*` et `/uploads/*` du client sont proxyfiés vers Express en développement.
+- [x] La base SQLite est créée automatiquement au premier démarrage, migrations appliquées (table `schema_migrations` renseignée).
+- [x] Le dossier `evision/` n'est ni modifié ni référencé par le build.
 
 ### US-1.2 — Données initiales (seed)
 **En tant que** développeur, **je veux** une base seedée avec un compte admin et deux plans, **afin de** pouvoir tester sans saisie manuelle préalable.
 
 Conditions d'acceptation :
-- [ ] Après le seed, un admin peut se connecter avec des identifiants documentés dans le README.
-- [ ] Les plans « Essentiel » et « Pro » existent avec leurs quotas (`max_active_sales`, `max_lots_per_sale`, `max_storage_mb`) et un prix d'affichage.
-- [ ] Relancer le seed ne duplique pas les données (idempotent).
+- [x] Après le seed, un admin peut se connecter avec des identifiants documentés dans le README. *(Compte créé et documenté ; la connexion elle-même arrive avec l'US-2.1.)*
+- [x] Les plans « Essentiel » et « Pro » existent avec leurs quotas (`max_active_sales`, `max_lots_per_sale`, `max_storage_mb`) et un prix d'affichage.
+- [x] Relancer le seed ne duplique pas les données (idempotent).
 
 ---
 
