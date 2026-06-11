@@ -270,3 +270,5 @@ Conditions d'acceptation :
 - Statistiques de scan pour les cabinets.
 - Application mobile native, PWA, mode hors-ligne.
 - Migration PostgreSQL et stockage objet (S3).
+- **eVision v2 — « rectangle renifleur »** : localisation visuelle de l'objet dans l'image caméra (rectangle qui suit l'objet et change de couleur à la reconnaissance, comme le projet 2018-19 inspiré d'Akhmadeev). Nécessite une brique de localisation par points caractéristiques (ex. OpenCV.js : niveaux de gris → détection d'arêtes/coins → mise en correspondance + homographie), éventuellement hybride avec MobileNet. À développer dans le projet eVision externe, réintégré seulement une fois au point.
+- **Comparateur de techniques de reconnaissance** : pouvoir basculer entre les moteurs (MobileNet actuel / eVision v2) depuis une page d'administration pour comparer détection, faux positifs et confort visuel en conditions réelles.
