@@ -196,8 +196,8 @@ Conditions d'acceptation :
 
 Conditions d'acceptation :
 - [x] Depuis la page de la vente, un bouton « Scanner le catalogue » ouvre la page de scan ; la caméra ne démarre qu'après un geste explicite (exigence Safari iOS). *(Le bouton « Activer la caméra » est géré par le composant eVision lui-même.)*
-- [ ] Étant donné une image de référence active imprimée, quand je la cadre dans le viewfinder, alors la fiche du lot correspondant s'ouvre. *(À vérifier en recette PO, webcam ou smartphone — voir README « Tester le scan caméra ».)*
-- [ ] Étant donné un lot avec plusieurs images de référence, quand je scanne n'importe laquelle, alors c'est la même fiche qui s'ouvre. *(À vérifier en recette PO — le mapping n→1 est vérifié côté manifeste par `check-scan.mjs`.)*
+- [x] Étant donné une image de référence active imprimée, quand je la cadre dans le viewfinder, alors la fiche du lot correspondant s'ouvre. *(Recette PO du 2026-06-12 sur ordinateur : reconnaissance immédiate, même en conditions dégradées. Test smartphone via tunnel HTTPS reporté.)*
+- [ ] Étant donné un lot avec plusieurs images de référence, quand je scanne n'importe laquelle, alors c'est la même fiche qui s'ouvre. *(Le mapping n→1 est vérifié côté manifeste par `check-scan.mjs` ; à confirmer caméra en main avec le test smartphone reporté.)*
 - [x] Pendant le chargement du modèle (5–15 s la première fois), un écran d'attente explicite est affiché. *(« Chargement du modèle IA… » + spinner, intégrés au composant.)*
 - [x] Le composant `ImageRecognizer` d'eVision est intégré **sans aucune modification** ; TensorFlow.js n'est chargé que sur la route de scan (lazy). *(Copie identique octet pour octet ; TF.js isolé dans le chunk ScanView au build.)*
 
@@ -271,4 +271,4 @@ Conditions d'acceptation :
 - Application mobile native, PWA, mode hors-ligne.
 - Migration PostgreSQL et stockage objet (S3).
 - **eVision v2 — « rectangle renifleur »** : localisation visuelle de l'objet dans l'image caméra (rectangle qui suit l'objet et change de couleur à la reconnaissance, comme le projet 2018-19 inspiré d'Akhmadeev). Nécessite une brique de localisation par points caractéristiques (ex. OpenCV.js : niveaux de gris → détection d'arêtes/coins → mise en correspondance + homographie), éventuellement hybride avec MobileNet. À développer dans le projet eVision externe, réintégré seulement une fois au point.
-- **Comparateur de techniques de reconnaissance** : pouvoir basculer entre les moteurs (MobileNet actuel / eVision v2) depuis une page d'administration pour comparer détection, faux positifs et confort visuel en conditions réelles.
+- **Comparateur de techniques de reconnaissance** : pouvoir basculer entre les moteurs (MobileNet actuel / eVision v2) depuis une page d'administration pour comparer détection, faux positifs et confort visuel en conditions réelles. Piste complémentaire côté acheteur : exposer le choix sous un nom simple évoquant le bénéfice (pas la technologie), de préférence en repli contextuel — proposer « essayer un autre mode de scan » quand rien n'est reconnu après quelques secondes, plutôt qu'un choix technique d'entrée de jeu.
