@@ -10,7 +10,7 @@ AuctionLens est une plateforme SaaS B2B pour cabinets de commissaires-priseurs :
 La brique de reconnaissance d'image existe déjà : `evision/` contient le composant React `<ImageRecognizer>` (TensorFlow.js / MobileNet v2, similarité cosinus), **terminé et intangible**. Tout le reste est à construire.
 
 **Décisions produit validées :**
-- Accès acheteur **anonyme** via URL publique par vente (slug imprimable en QR code) — aucun compte acheteur.
+- Accès acheteur **anonyme** via URL publique par vente — aucun compte acheteur. Deux conventions d'impression dans le catalogue : **1/** un **QR code unique** vers l'URL de la vente, imprimé sur la page d'informations pratiques du catalogue (dates, adresses — typiquement page 3), où il n'est pas choquant ; **2/** le scan se fait ensuite directement sur les **images des lots**, une **petite icône discrète** à côté d'une image signalant qu'elle est scannable. La plateforme fournit ces deux assets (QR généré + icône, avec consigne d'usage) dans le studio pour garantir une convention visuelle commune à tous les catalogues.
 - Cycle de vie d'une vente : **Brouillon → Publiée → Archivée**.
 - Abonnements simulés avec **plans à quotas réellement appliqués** (nb ventes actives, nb lots, stockage).
 
@@ -57,7 +57,7 @@ Authentification : sessions par cookie HTTP-only (`express-session` + store SQLi
 ### 1.4 Flux de données acheteur (cœur du produit)
 
 ```
-1. Acheteur ouvre /v/:saleSlug (QR du catalogue)
+1. Acheteur ouvre /v/:saleSlug (QR code en page d'informations du catalogue)
 2. GET /api/public/sales/:slug/recognition-manifest
    → { threshold, references: [{ id: imageRefId, src: url, lotId }] }
 3. <ImageRecognizer references={…} onImageRecognized={…}>
@@ -118,7 +118,7 @@ User n──1 Cabinet (nullable pour les admins)
 | id | INTEGER PK | |
 | cabinet_id | INTEGER FK → cabinets | |
 | title | TEXT | |
-| slug | TEXT UNIQUE | URL publique `/v/:slug`, généré depuis le titre + suffixe anti-collision, **figé à la première publication** (les QR sont imprimés) |
+| slug | TEXT UNIQUE | URL publique `/v/:slug`, généré depuis le titre + suffixe anti-collision, **figé à la première publication** (le QR imprimé pointe dessus) |
 | description | TEXT | |
 | event_date | TEXT | date de la vente physique (information, pas d'automatisme) |
 | location | TEXT | |
@@ -263,7 +263,7 @@ Chaque phase livre un système **fonctionnel et démontrable** de bout en bout.
 **Démontrable :** sur smartphone, un acheteur anonyme parcourt une vente publiée et consulte les fiches enrichies. **Le produit a déjà de la valeur sans le scan** — c'est le filet de sécurité si la reconnaissance déçoit en conditions réelles.
 
 ### Phase 5 — Intégration eVision : le scan
-**Construit :** copie du composant `ImageRecognizer` (+ CSS + script `copy-wasm.mjs` + fichiers `public/tfwasm/`) d'`evision/` vers `client/` **sans modification** ; endpoint `recognition-manifest` ; page de scan `/v/:slug/scan` en route lazy (TF.js hors du bundle principal) ; mapping imageRefId → lotId ; à la reconnaissance : redirection vers la fiche lot ; gestion permission caméra refusée (fallback liste) ; champ `recognition_threshold` par vente exposé dans le studio avec mode debug (`debugOverlay`) pour la calibration par le cabinet ; setup HTTPS de dev pour test mobile (`vite --host` + certificat ou ngrok, cf. README eVision).
+**Construit :** copie du composant `ImageRecognizer` (+ CSS + script `copy-wasm.mjs` + fichiers `public/tfwasm/`) d'`evision/` vers `client/` **sans modification** ; endpoint `recognition-manifest` ; page de scan `/v/:slug/scan` en route lazy (TF.js hors du bundle principal) ; mapping imageRefId → lotId ; à la reconnaissance : redirection vers la fiche lot ; gestion permission caméra refusée (fallback liste) ; champ `recognition_threshold` par vente exposé dans le studio avec mode debug (`debugOverlay`) pour la calibration par le cabinet ; setup HTTPS de dev pour test mobile (`vite --host` + certificat ou ngrok, cf. README eVision) ; kit catalogue dans le studio : QR code de la vente généré et téléchargeable (à imprimer sur la page d'informations pratiques du catalogue) + icône « scannable » (formats vectoriel + PNG, à placer à côté de chaque image scannable), avec consignes d'usage.
 **Reporté :** raffinements UX du scan.
 **Démontrable :** scan d'une page de catalogue imprimée → fiche du lot en < 2 s après reconnaissance ; deux photos différentes du même lot mènent à la même fiche.
 
