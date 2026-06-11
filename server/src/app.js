@@ -6,6 +6,7 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import db from './db/index.js'
 import authRouter from './routes/auth.js'
+import adminRouter from './routes/admin.js'
 import { requireAdmin, requireCabinet } from './middleware/auth.js'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
@@ -43,10 +44,8 @@ app.get('/api/health', (req, res) => {
 
 app.use('/api/auth', authRouter)
 
-// Espaces protégés : les routeurs métier seront branchés ici (EPIC 3 et suivantes).
-// Monter les middlewares dès maintenant garantit que TOUTE route /api/admin/*
-// ou /api/studio/* exige le bon rôle, y compris les routes futures.
-const adminRouter = express.Router()
+// Espaces protégés : tout /api/admin/* ou /api/studio/* exige le bon rôle,
+// y compris les routes futures.
 const studioRouter = express.Router()
 app.use('/api/admin', requireAdmin, adminRouter)
 app.use('/api/studio', requireCabinet, studioRouter)
@@ -56,5 +55,5 @@ app.use('/api', (req, res) => {
   res.status(404).json({ error: { code: 'NOT_FOUND', message: 'Route inconnue' } })
 })
 
-export { adminRouter, studioRouter }
+export { studioRouter }
 export default app

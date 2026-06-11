@@ -85,3 +85,48 @@ a {
   margin-left: auto;
   padding: 4px 12px;
 }
+
+.page-wide {
+  max-width: 960px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 8px 0 24px;
+}
+
+.table th,
+.table td {
+  text-align: left;
+  padding: 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+.badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 13px;
+}
+
+.badge-active {
+  background: #e3f2e6;
+  color: #1b6e2a;
+}
+
+.badge-suspended {
+  background: #fdeceb;
+  color: #b3261e;
+}
+
+button.danger {
+  background: #b3261e;
+}
+
+.notice {
+  padding: 12px 16px;
+  border: 1px solid #e0c97f;
+  border-radius: 4px;
+  background: #fdf6e3;
+}

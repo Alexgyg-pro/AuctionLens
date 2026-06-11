@@ -1,11 +1,16 @@
+import { Routes, Route } from 'react-router-dom'
 import UserBar from '../../components/UserBar.jsx'
+import CabinetList from './CabinetList.jsx'
+import CabinetDetail from './CabinetDetail.jsx'
 
 export default function AdminHome() {
   return (
-    <main className="page">
+    <main className="page page-wide">
       <UserBar />
-      <h1>Administration</h1>
-      <p>Gestion des cabinets et des abonnements — à venir (EPIC 3).</p>
+      <Routes>
+        <Route index element={<CabinetList />} />
+        <Route path="cabinets/:id" element={<CabinetDetail />} />
+      </Routes>
     </main>
   )
 }

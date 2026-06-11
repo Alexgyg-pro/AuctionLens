@@ -78,24 +78,24 @@ Conditions d'acceptation :
 **En tant qu'**Admin, **je veux** créer un cabinet avec son premier compte utilisateur et son plan, **afin d'**onboarder un nouveau client.
 
 Conditions d'acceptation :
-- [ ] Quand je crée un cabinet (nom, email de contact, plan, email + mot de passe provisoire du premier utilisateur), alors le cabinet apparaît dans la liste et son utilisateur peut se connecter au studio.
-- [ ] Un email d'utilisateur déjà pris est refusé avec un message clair.
-- [ ] Le cabinet est créé avec le statut `active` et une date d'échéance d'abonnement.
+- [x] Quand je crée un cabinet (nom, email de contact, plan, email + mot de passe provisoire du premier utilisateur), alors le cabinet apparaît dans la liste et son utilisateur peut se connecter au studio.
+- [x] Un email d'utilisateur déjà pris est refusé avec un message clair.
+- [x] Le cabinet est créé avec le statut `active` et une date d'échéance d'abonnement.
 
 ### US-3.2 — Suivi et modification d'un cabinet
 **En tant qu'**Admin, **je veux** consulter le détail d'un cabinet (plan, consommation des quotas) et le modifier, **afin de** suivre mes clients.
 
 Conditions d'acceptation :
-- [ ] La fiche cabinet affiche : plan courant, statut, échéance, nombre de ventes actives, nombre total de lots, stockage consommé en Mo.
-- [ ] Quand je change le plan d'un cabinet, alors les nouveaux quotas s'appliquent immédiatement aux prochaines actions (sans casser l'existant qui dépasse).
+- [x] La fiche cabinet affiche : plan courant, statut, échéance, nombre de ventes actives, nombre total de lots, stockage consommé en Mo. *(Compteurs à 0 tant que ventes/lots n'existent pas — deviendront réels à l'EPIC 4 sans changement de code.)*
+- [x] Quand je change le plan d'un cabinet, alors les nouveaux quotas s'appliquent immédiatement aux prochaines actions (sans casser l'existant qui dépasse).
 
 ### US-3.3 — Suspension / réactivation
 **En tant qu'**Admin, **je veux** suspendre ou réactiver l'abonnement d'un cabinet, **afin de** simuler les impayés et résiliations.
 
 Conditions d'acceptation :
-- [ ] Étant donné un cabinet suspendu, quand son utilisateur tente d'utiliser le studio, alors l'accès est bloqué avec un message explicite (la session existante ne suffit pas : vérifié à chaque requête).
-- [ ] Étant donné un cabinet suspendu, quand un acheteur ouvre l'URL publique d'une de ses ventes publiées, alors la réponse est `404`.
-- [ ] Quand je réactive le cabinet, alors le studio et les URLs publiques refonctionnent sans autre action.
+- [x] Étant donné un cabinet suspendu, quand son utilisateur tente d'utiliser le studio, alors l'accès est bloqué avec un message explicite (la session existante ne suffit pas : vérifié à chaque requête).
+- [ ] Étant donné un cabinet suspendu, quand un acheteur ouvre l'URL publique d'une de ses ventes publiées, alors la réponse est `404`. *(Vérifiable à l'EPIC 6, quand les routes publiques existeront.)*
+- [x] Quand je réactive le cabinet, alors le studio et les URLs publiques refonctionnent sans autre action. *(Studio vérifié ; URLs publiques à l'EPIC 6.)*
 
 ---
 
