@@ -7,7 +7,8 @@
   "scripts": {
     "dev": "node --watch src/server.js",
     "start": "node src/server.js",
-    "seed": "node src/db/seed.js"
+    "seed": "node src/db/seed.js",
+    "test": "node scripts/check-auth.mjs && node scripts/check-admin.mjs && node scripts/check-studio.mjs && node scripts/check-media.mjs && node scripts/check-public.mjs && node scripts/check-scan.mjs && node scripts/check-hardening.mjs"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",

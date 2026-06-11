@@ -2,6 +2,7 @@ import { Router } from 'express'
 import bcrypt from 'bcryptjs'
 import db from '../db/index.js'
 import { requireAuth } from '../middleware/auth.js'
+import { loginRateLimit } from '../middleware/rateLimit.js'
 
 const router = Router()
 
@@ -9,7 +10,7 @@ const LOGIN_ERROR = {
   error: { code: 'INVALID_CREDENTIALS', message: 'Email ou mot de passe incorrect' },
 }
 
-router.post('/login', (req, res) => {
+router.post('/login', loginRateLimit, (req, res) => {
   const { email, password } = req.body ?? {}
   if (typeof email !== 'string' || typeof password !== 'string') {
     return res.status(400).json({
@@ -23,6 +24,7 @@ router.post('/login', (req, res) => {
 
   // Message générique : ne pas révéler si l'email existe.
   if (!user || !bcrypt.compareSync(password, user.password_hash)) {
+    res.locals.noteLoginFailure()
     return res.status(401).json(LOGIN_ERROR)
   }
 
@@ -31,6 +33,7 @@ router.post('/login', (req, res) => {
     req.session.userId = user.id
     req.session.role = user.role
     req.session.cabinetId = user.cabinet_id
+    res.locals.clearLoginFailures()
     res.json(currentUserPayload(user.id))
   })
 })

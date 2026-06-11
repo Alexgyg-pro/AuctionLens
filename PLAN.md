@@ -1,8 +1,8 @@
 # AuctionLens — Plan d'architecture et de développement
 
 > Document de référence. Le développement se fait phase par phase (voir §4).
-> Statut : **EPIC 7 validée et releasée** le 2026-06-12 (recette PO sur ordinateur : reconnaissance OK ; test smartphone via tunnel HTTPS reporté, voir US-7.1). EPIC 1 à 7 releasées.
-> Prochaine étape : **EPIC 8** (finitions & durcissement — Phase 6).
+> Statut : **EPIC 8 (finitions & durcissement) terminée** le 2026-06-12 — Phase 6 complète, en attente de recette PO. **Les 8 EPICs de la v1 sont développées.**
+> Reste ouvert : test smartphone du scan (US-7.1, tunnel ngrok) et recette de l'EPIC 8.
 > Releases GitHub : merge `develop` → `main` + push en fin d'EPIC validée (branche distante unique : `main`).
 
 ## Contexte

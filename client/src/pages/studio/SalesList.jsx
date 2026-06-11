@@ -41,9 +41,22 @@ export default function SalesList() {
 
   if (!sales) return <p>Chargement…</p>
 
+  const byStatus = {
+    draft: sales.filter((s) => s.status === 'draft').length,
+    published: sales.filter((s) => s.status === 'published').length,
+    archived: sales.filter((s) => s.status === 'archived').length,
+  }
+
   return (
     <>
       <h1>Mes ventes</h1>
+      {sales.length > 0 && (
+        <p className="dashboard-line">
+          <span className="badge badge-draft">{byStatus.draft} brouillon{byStatus.draft > 1 ? 's' : ''}</span>{' '}
+          <span className="badge badge-active">{byStatus.published} publiée{byStatus.published > 1 ? 's' : ''}</span>{' '}
+          <span className="badge badge-archived">{byStatus.archived} archivée{byStatus.archived > 1 ? 's' : ''}</span>
+        </p>
+      )}
       {quotas && (
         <p className="quotas">
           Plan <strong>{quotas.plan.name}</strong> — ventes publiées :{' '}

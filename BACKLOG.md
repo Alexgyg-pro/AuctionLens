@@ -242,23 +242,23 @@ Conditions d'acceptation :
 **En tant que** Cabinet, **je veux** un tableau de bord (mes ventes par statut, consommation des quotas), **afin de** piloter mon activité d'un coup d'œil.
 
 Conditions d'acceptation :
-- [ ] Le tableau de bord cabinet affiche les ventes par statut et la consommation des trois quotas du plan.
-- [ ] L'admin dispose d'une vue d'ensemble : cabinets par statut, échéances d'abonnement proches.
+- [x] Le tableau de bord cabinet affiche les ventes par statut et la consommation des trois quotas du plan. *(Page « Mes ventes » : compteurs par statut + widget quotas.)*
+- [x] L'admin dispose d'une vue d'ensemble : cabinets par statut, échéances d'abonnement proches. *(Page « Cabinets » : compteurs actifs/suspendus + bandeau des échéances sous 30 jours, marquage ⚠ dans la liste.)*
 
 ### US-8.2 — Robustesse et sécurité
 **En tant que** plateforme, **je veux** des entrées validées, des erreurs propres et une protection contre la force brute, **afin de** tenir une utilisation réelle.
 
 Conditions d'acceptation :
-- [ ] Toute entrée API est validée (types, longueurs, valeurs d'énumération) avec des erreurs `{ error: { code, message } }` cohérentes.
-- [ ] `/api/auth/login` est limité en fréquence (rate limiting) ; les tentatives échouées répétées sont ralenties.
-- [ ] Tous les états vides, de chargement et d'erreur des écrans principaux sont conçus (pas d'écran blanc).
+- [x] Toute entrée API est validée (types, longueurs, valeurs d'énumération) avec des erreurs `{ error: { code, message } }` cohérentes. *(Types et énumérations depuis les EPICs 2–7 ; plafonds de longueur et JSON malformé → 400 ajoutés ici — `check-hardening.mjs`.)*
+- [x] `/api/auth/login` est limité en fréquence (rate limiting) ; les tentatives échouées répétées sont ralenties. *(5 échecs par couple IP + email sur 15 min → 429 ; remise à zéro à la connexion réussie.)*
+- [x] Tous les états vides, de chargement et d'erreur des écrans principaux sont conçus (pas d'écran blanc). *(Chargement/vide/erreur présents sur les pages admin, studio et publiques ; vérification visuelle en recette PO.)*
 
 ### US-8.3 — Tests des règles critiques
 **En tant qu'**équipe, **je veux** des tests automatisés sur les invariants métier, **afin d'**éviter les régressions sur ce qui protège les données et le modèle économique.
 
 Conditions d'acceptation :
-- [ ] Tests automatisés couvrant : cloisonnement inter-cabinets, application des trois quotas, transitions de statut de vente, contenu du manifeste de reconnaissance (images actives uniquement, vente publiée uniquement).
-- [ ] Les tests passent sur `develop` avant tout merge vers `main`.
+- [x] Tests automatisés couvrant : cloisonnement inter-cabinets, application des trois quotas, transitions de statut de vente, contenu du manifeste de reconnaissance (images actives uniquement, vente publiée uniquement). *(7 scripts, 117 contrôles, lancés d'une commande : `npm test` dans `server/`.)*
+- [x] Les tests passent sur `develop` avant tout merge vers `main`. *(Règle documentée au README et appliquée à chaque release.)*
 
 ---
 

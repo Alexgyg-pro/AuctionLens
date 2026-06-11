@@ -69,6 +69,27 @@ Le premier chargement du modèle MobileNet prend 5–15 s selon la connexion ;
 les fichiers WASM de TF.js sont copiés dans `client/public/tfwasm/` par le
 script `postinstall` (`scripts/copy-wasm.mjs`).
 
+## Tests
+
+```bash
+cd server && npm test
+```
+
+Rejoue les 7 scripts de vérification (117 contrôles : auth, admin, studio,
+médias, public, scan, durcissement). Chaque script démarre son propre serveur
+sur le port 3100 et nettoie ses données de test. **Règle d'équipe : `npm test`
+doit passer sur `develop` avant tout merge vers `main`.**
+
+## Production locale (démo un seul processus)
+
+```bash
+cd client && npm run build   # génère client/dist
+cd ../server && npm start    # sert l'API ET la SPA sur http://localhost:3000
+```
+
+Quand `client/dist` existe, Express sert lui-même le build du client —
+plus besoin de Vite. (Supprimer `client/dist` pour revenir au mode dev pur.)
+
 ## Identifiants de développement (seed)
 
 | Rôle    | Email                       | Mot de passe  |
