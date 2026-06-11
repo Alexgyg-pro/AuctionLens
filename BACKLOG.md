@@ -26,7 +26,7 @@
 **En tant que** développeur, **je veux** démarrer le client et le serveur avec une commande chacun, **afin de** travailler sur une base saine et reproductible.
 
 Conditions d'acceptation :
-- [x] Étant donné un clone du dépôt, quand je lance l'installation puis le serveur et le client, alors la SPA s'affiche sur `http://localhost:5173` et `GET /api/health` répond `200`. *(API vérifiée ; affichage de la SPA à confirmer par le PO dans son navigateur.)*
+- [x] Étant donné un clone du dépôt, quand je lance l'installation puis le serveur et le client, alors la SPA s'affiche sur `http://localhost:5173` et `GET /api/health` répond `200`. *(Affichage validé par le PO le 2026-06-11.)*
 - [x] Les appels `/api/*` et `/uploads/*` du client sont proxyfiés vers Express en développement.
 - [x] La base SQLite est créée automatiquement au premier démarrage, migrations appliquées (table `schema_migrations` renseignée).
 - [x] Le dossier `evision/` n'est ni modifié ni référencé par le build.
@@ -49,24 +49,24 @@ Conditions d'acceptation :
 **En tant qu'**utilisateur (admin ou cabinet), **je veux** me connecter avec mon email et mon mot de passe, **afin d'** accéder à mon espace.
 
 Conditions d'acceptation :
-- [ ] Étant donné des identifiants valides, quand je me connecte, alors une session est créée (cookie HTTP-only) et je suis redirigé vers mon espace (`/admin` ou `/studio` selon le rôle).
-- [ ] Étant donné des identifiants invalides, quand je me connecte, alors un message d'erreur générique s'affiche (sans révéler si l'email existe).
-- [ ] Les mots de passe sont stockés hashés (bcrypt) — jamais en clair, jamais renvoyés par l'API.
+- [x] Étant donné des identifiants valides, quand je me connecte, alors une session est créée (cookie HTTP-only) et je suis redirigé vers mon espace (`/admin` ou `/studio` selon le rôle).
+- [x] Étant donné des identifiants invalides, quand je me connecte, alors un message d'erreur générique s'affiche (sans révéler si l'email existe).
+- [x] Les mots de passe sont stockés hashés (bcrypt) — jamais en clair, jamais renvoyés par l'API.
 
 ### US-2.2 — Déconnexion et session
 **En tant qu'**utilisateur connecté, **je veux** me déconnecter, **afin de** protéger mon compte sur un poste partagé.
 
 Conditions d'acceptation :
-- [ ] Quand je me déconnecte, alors la session est détruite côté serveur et toute requête suivante sur une route protégée répond `401`.
-- [ ] `GET /api/auth/me` renvoie mon rôle et, pour un cabinet, son plan et son statut d'abonnement.
+- [x] Quand je me déconnecte, alors la session est détruite côté serveur et toute requête suivante sur une route protégée répond `401`.
+- [x] `GET /api/auth/me` renvoie mon rôle et, pour un cabinet, son plan et son statut d'abonnement.
 
 ### US-2.3 — Protection des espaces
 **En tant que** plateforme, **je veux** que chaque route soit réservée à son rôle, **afin qu'**aucun utilisateur n'accède aux données d'un autre.
 
 Conditions d'acceptation :
-- [ ] Étant donné un utilisateur cabinet, quand il appelle une route `/api/admin/*`, alors la réponse est `403`.
-- [ ] Étant donné un visiteur non connecté, quand il appelle une route `/api/studio/*` ou `/api/admin/*`, alors la réponse est `401`.
-- [ ] Étant donné un cabinet A, quand il tente d'accéder à une vente, un lot, une image ou une ressource du cabinet B (par id direct), alors la réponse est `404`.
+- [x] Étant donné un utilisateur cabinet, quand il appelle une route `/api/admin/*`, alors la réponse est `403`.
+- [x] Étant donné un visiteur non connecté, quand il appelle une route `/api/studio/*` ou `/api/admin/*`, alors la réponse est `401`.
+- [ ] Étant donné un cabinet A, quand il tente d'accéder à une vente, un lot, une image ou une ressource du cabinet B (par id direct), alors la réponse est `404`. *(Vérifiable à partir de l'EPIC 4, quand ces entités existeront — la règle est posée dans le middleware.)*
 
 ---
 

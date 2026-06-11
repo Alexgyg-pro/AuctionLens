@@ -21,6 +21,9 @@ export default function Home() {
       <nav>
         <ul>
           <li>
+            <Link to="/login">Connexion</Link>
+          </li>
+          <li>
             <Link to="/admin">Espace administration</Link>
           </li>
           <li>

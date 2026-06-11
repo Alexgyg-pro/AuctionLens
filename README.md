@@ -39,11 +39,13 @@ Le client proxe `/api` et `/uploads` vers l'API en développement.
 
 ## Identifiants de développement (seed)
 
-| Rôle  | Email                     | Mot de passe |
-|-------|---------------------------|--------------|
-| Admin | `admin@auctionlens.local` | `admin123!`  |
+| Rôle    | Email                       | Mot de passe  |
+|---------|-----------------------------|---------------|
+| Admin   | `admin@auctionlens.local`   | `admin123!`   |
+| Cabinet | `cabinet@auctionlens.local` | `cabinet123!` |
 
-Le seed crée aussi les plans « Essentiel » et « Pro ».
+Le seed crée aussi les plans « Essentiel » et « Pro », ainsi qu'un
+« Cabinet Démo » (plan Essentiel) rattaché au compte cabinet.
 La base SQLite vit dans `server/data/` (non versionnée).
 
 ## Conventions Git
