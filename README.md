@@ -92,10 +92,12 @@ plus besoin de Vite. (Supprimer `client/dist` pour revenir au mode dev pur.)
 
 ## Identifiants de développement (seed)
 
-| Rôle    | Email                       | Mot de passe  |
-|---------|-----------------------------|---------------|
-| Admin   | `admin@auctionlens.local`   | `admin123!`   |
-| Cabinet | `cabinet@auctionlens.local` | `cabinet123!` |
+| Rôle    | Email                        | Mot de passe  |
+| ------- | ---------------------------- | ------------- |
+| Admin   | `admin@auctionlens.local`    | `admin123!`   |
+| Cabinet | `cabinet@auctionlens.local`  | `cabinet123!` |
+| Cabinet | `contact@corto-ventes.local` | `CVabc123!`   |
+| Cabinet | `contact@soda.local`         | `Soda123!`    |
 
 Le seed crée aussi les plans « Essentiel » et « Pro », ainsi qu'un
 « Cabinet Démo » (plan Essentiel) rattaché au compte cabinet.
