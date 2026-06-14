@@ -178,14 +178,22 @@ démonstration.**
 ## Note technique — changement de modèle (2026-06-14)
 
 Les sessions des 11 et 12 juin 2026 ont été menées par **Claude Fable 5**
-(c'est ce nom qui co-signe les commits de cette période). Ce modèle est
-devenu indisponible peu après. À partir du 14 juin 2026, le projet continue
-avec **Claude Opus 4.8**.
+(c'est ce nom qui co-signe les commits de cette période). À partir du
+14 juin 2026, le projet continue avec **Claude Opus 4.8**.
+
+Pourquoi le changement : le 12 juin 2026, le gouvernement américain a émis une
+directive de contrôle à l'exportation (motif de sécurité nationale) imposant à
+Anthropic de suspendre l'accès à Fable 5 et Mythos 5 pour **tous** les
+utilisateurs dans le monde. Ne pouvant pas distinguer en temps réel les
+ressortissants étrangers visés par la directive, Anthropic a désactivé les deux
+modèles pour tout le monde. L'entreprise conteste la mesure, la qualifie de
+« malentendu » (le « jailbreak » invoqué serait étroit et non universel) et
+travaille à rétablir l'accès ; les autres modèles ne sont pas touchés.
+*(Sources : page officielle Anthropic « fable-mythos-access » ; heise online ;
+TechTimes — juin 2026.)*
 
 Rien ne change au code ni aux décisions : seul le nom de l'auteur dans
-l'historique Git diffère selon la période. *(La cause exacte de
-l'indisponibilité de Fable 5 n'est pas consignée ici, faute d'information
-vérifiée à ce sujet.)*
+l'historique Git diffère selon la période.
 
 ---
 

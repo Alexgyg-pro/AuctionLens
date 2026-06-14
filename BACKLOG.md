@@ -262,6 +262,29 @@ Conditions d'acceptation :
 
 ---
 
+## EPIC 9 — Améliorations post-v1 *(backlog ouvert)*
+
+> Idées nées après la livraison de la v1, à prioriser ultérieurement.
+
+### US-9.1 — Révéler le mot de passe saisi (appui maintenu)
+**En tant qu'**utilisateur qui saisit un mot de passe (page de connexion, ou mot de passe provisoire à la création d'un cabinet côté admin), **je veux** afficher en clair le mot de passe que je tape en maintenant un bouton enfoncé, **afin de** vérifier ma saisie sans le laisser visible durablement.
+
+Conditions d'acceptation :
+- [ ] Une icône « œil » est placée à côté du champ mot de passe.
+- [ ] Tant que le bouton est maintenu enfoncé (souris ou tactile), le mot de passe s'affiche en clair ; dès qu'on relâche, il repasse masqué.
+- [ ] S'applique au moins au champ de connexion et au mot de passe provisoire de création de cabinet.
+- [ ] Une variante accessible au clavier est prévue (le maintien souris/tactile ne doit pas être le seul moyen d'y accéder).
+
+### US-9.2 — Sortir les comptes de test du README
+**En tant que** développeur, **je veux** que les identifiants de test (emails + mots de passe) vivent dans un fichier non versionné plutôt que dans le README, **afin de** ne pas exposer ces informations dans le dépôt et garder le README propre.
+
+Conditions d'acceptation :
+- [ ] Les identifiants de test sont déplacés dans un fichier local ignoré par Git (ex. `COMPTES-TEST.local.md`).
+- [ ] Le fichier est listé dans `.gitignore`.
+- [ ] Le README renvoie vers le seed (`npm run seed`) et/ou vers ce fichier local, sans lister les mots de passe.
+
+---
+
 ## Hors périmètre v1 (vu, décidé, reporté)
 
 - Paiement réel (l'abonnement reste simulé, géré par l'admin).
