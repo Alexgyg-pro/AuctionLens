@@ -172,3 +172,57 @@ partie du travail de PO lui-même —
 recettes, releases — est un travail à part entière, et c'est lui qui
 détermine la vitesse utile d'une équipe, humaine ou IA. Ce dépôt en est la
 démonstration.**
+
+---
+
+## Note technique — changement de modèle (2026-06-14)
+
+Les sessions des 11 et 12 juin 2026 ont été menées par **Claude Fable 5**
+(c'est ce nom qui co-signe les commits de cette période). Ce modèle est
+devenu indisponible peu après. À partir du 14 juin 2026, le projet continue
+avec **Claude Opus 4.8**.
+
+Rien ne change au code ni aux décisions : seul le nom de l'auteur dans
+l'historique Git diffère selon la période. *(La cause exacte de
+l'indisponibilité de Fable 5 n'est pas consignée ici, faute d'information
+vérifiée à ce sujet.)*
+
+---
+
+## 2026-06-14 — Le test smartphone et la question de l'URL permanente
+
+Reste à valider la dernière case du projet : le scan caméra sur un vrai
+smartphone, qui exige une adresse en HTTPS (impossible avec `localhost` sur
+un téléphone). La solution est un **tunnel** : un outil qui donne une adresse
+web publique et temporaire pointant vers l'application qui tourne sur le PC.
+
+Alexandre voulait éviter la création d'un compte ngrok (la friction qu'il
+avait repoussée la veille). Bascule vers **Cloudflare Tunnel
+(`cloudflared`)**, qui fait la même chose **sans aucun compte** — au prix
+d'une ligne de config ajoutée dans Vite pour autoriser le domaine
+`.trycloudflare.com`. Le test a réussi : sur le téléphone, la fiche du lot
+s'ouvre ; et la boucle complète **scanner le QR → arriver sur le site →
+scanner l'image** fonctionne.
+
+Puis Alexandre a pointé le vrai sujet : cette adresse est **provisoire**
+(elle change à chaque lancement du tunnel et disparaît quand on le coupe).
+Or un QR code s'imprime sur papier : il est permanent. Mise au clair :
+
+- Le **chemin** de l'URL (`/v/figurines-manga-resine`) est déjà permanent —
+  c'est la décision « slug figé à la première publication » prise dès le
+  départ, justement pour que les QR imprimés ne cassent jamais.
+- Le **domaine** (`xxxx.trycloudflare.com`) est temporaire, parce que c'est
+  un outil de test. Pour un QR permanent, il faut **héberger** l'application
+  à un domaine fixe (ex. `auctionlens.fr`) — c'est l'étape de déploiement,
+  laissée hors de la v1 (l'appli tourne en local, base SQLite + fichiers sur
+  disque). Le QR du « Kit catalogue » se générant à partir de l'adresse de
+  navigation, il pointera tout seul vers la bonne adresse le jour du
+  déploiement.
+
+**Enseignement : un support physique (un QR imprimé) impose une contrainte
+numérique permanente — tout ce vers quoi il pointe doit être stable. La
+moitié était déjà anticipée (slug figé = chemin permanent) ; l'autre moitié,
+le domaine permanent, c'est le déploiement. Distinguer « le produit marche »
+(v1, prouvé) de « le produit est en ligne pour de vrais cabinets »
+(déploiement) est un jalon de feuille de route à part entière — c'est la
+prochaine étape naturelle du projet.**

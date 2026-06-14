@@ -196,8 +196,8 @@ Conditions d'acceptation :
 
 Conditions d'acceptation :
 - [x] Depuis la page de la vente, un bouton « Scanner le catalogue » ouvre la page de scan ; la caméra ne démarre qu'après un geste explicite (exigence Safari iOS). *(Le bouton « Activer la caméra » est géré par le composant eVision lui-même.)*
-- [x] Étant donné une image de référence active imprimée, quand je la cadre dans le viewfinder, alors la fiche du lot correspondant s'ouvre. *(Recette PO du 2026-06-12 sur ordinateur : reconnaissance immédiate, même en conditions dégradées. Test smartphone via tunnel HTTPS reporté.)*
-- [ ] Étant donné un lot avec plusieurs images de référence, quand je scanne n'importe laquelle, alors c'est la même fiche qui s'ouvre. *(Le mapping n→1 est vérifié côté manifeste par `check-scan.mjs` ; à confirmer caméra en main avec le test smartphone reporté.)*
+- [x] Étant donné une image de référence active imprimée, quand je la cadre dans le viewfinder, alors la fiche du lot correspondant s'ouvre. *(Recette PO sur ordinateur le 2026-06-12 ; test smartphone validé le 2026-06-14 via tunnel Cloudflare — reconnaissance immédiate, même en conditions dégradées.)*
+- [x] Étant donné un lot avec plusieurs images de référence, quand je scanne n'importe laquelle, alors c'est la même fiche qui s'ouvre. *(Équivalence garantie par le manifeste — toutes les vues actives d'un lot pointent vers la même fiche, vérifié par `check-scan.mjs` ; scan smartphone validé le 2026-06-14.)*
 - [x] Pendant le chargement du modèle (5–15 s la première fois), un écran d'attente explicite est affiché. *(« Chargement du modèle IA… » + spinner, intégrés au composant.)*
 - [x] Le composant `ImageRecognizer` d'eVision est intégré **sans aucune modification** ; TensorFlow.js n'est chargé que sur la route de scan (lazy). *(Copie identique octet pour octet ; TF.js isolé dans le chunk ScanView au build.)*
 

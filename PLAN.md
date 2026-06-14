@@ -1,8 +1,8 @@
 # AuctionLens — Plan d'architecture et de développement
 
 > Document de référence. Le développement se fait phase par phase (voir §4).
-> Statut : **EPIC 8 (finitions & durcissement) terminée** le 2026-06-12 — Phase 6 complète, en attente de recette PO. **Les 8 EPICs de la v1 sont développées.**
-> Reste ouvert : test smartphone du scan (US-7.1, tunnel ngrok) et recette de l'EPIC 8.
+> Statut : **v1 complète — les 8 EPICs validées et releasées sur `main`.** Recette finale du scan smartphone validée le 2026-06-14 (tunnel Cloudflare : boucle QR → site → scan confirmée sur téléphone).
+> Suite, hors périmètre v1 : **déploiement** (hébergement à un domaine fixe pour des QR permanents, puis migration PostgreSQL + stockage objet) — voir `CONVERSATIONS.md` (2026-06-14).
 > Releases GitHub : merge `develop` → `main` + push en fin d'EPIC validée (branche distante unique : `main`).
 
 ## Contexte
